@@ -103,4 +103,69 @@ class ArrayHelper
         
         return $dataList;
     }
+
+    /**
+     * Groups an array by a given key.
+     *
+     * @param array $array The array to have grouping performed on
+     * @param string $key The key to group or split by
+     * @example
+     *  $usersDeptData = [
+     *      0 => [
+     *          'd_sn' => '20',
+     *          'u_sn' => '100',
+     *      ],
+     *      1 => [
+     *          'd_sn' => '20',
+     *          'u_sn' => '101',
+     *      ],
+     *      2 => [
+     *          'd_sn' => '21',
+     *          'u_sn' => '102',
+     *      ]
+     *  ];
+     *  \nueip\helpers\ArrayHelper::groupBy($usersDeptData, 'd_sn');
+     *  result : $usersDeptData = [
+     *     '20' => [
+     *         0 => [
+     *             'd_sn' => '20',
+     *             'u_sn' => '100',
+     *         ],
+     *         1 => [
+     *             'd_sn' => '20',
+     *             'u_sn' => '101',
+     *         ],
+     *     ],
+     *     '21' => [
+     *         0 => [
+     *             'd_sn' => '21',
+     *             'u_sn' => '100',
+     *         ],
+     *     ]
+     *  ];
+     *
+     * @return array Returns a multidimensional array
+     */
+    public static function groupBy(array &$array, $key)
+    {
+        $grouped = [];
+
+        foreach ($array as $row) {
+            $valueForKey = null;
+
+            if (is_object($row) && isset($row->{$key})) {
+                $valueForKey = $row->{$key};
+            } elseif (isset($row[$key])) {
+                $valueForKey = $row[$key];
+            }
+
+            if (is_null($valueForKey)) {
+                continue;
+            }
+
+            $grouped[$valueForKey][] = $row;
+        }
+
+        return $array = $grouped;
+    }
 }
