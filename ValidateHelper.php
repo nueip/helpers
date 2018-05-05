@@ -124,7 +124,8 @@ class ValidateHelper
                 self::$_response->json($msg, $msgCode);
                 break;
             case 'exception':
-                throw new Exception($msg, (int) $msgCode);
+                $msg = is_array($msg) ? json_encode($msg) : $msg;
+                throw new \Exception($msg, (int) $msgCode);
                 break;
             case 'return':
                 return $msg;
