@@ -52,7 +52,7 @@ class ArrayHelper
      * - 欄位 manager 值放一個陣列, 欄位 sign_manager, c_user 值放同一陣列中，形成2維陣列 $dataList2 = ['manager' => [], 'other' => []];
      * - $ssnList2 = \nueip\helpers\ArrayHelper::gatherData($data, array('manager' => array('manager'), 'other' => array('sign_manager','c_user')), 1);
      *
-     * 遞迴效率太差 - 改限最小定層數為1層，並1層時不用遞迴
+     * 遞迴效率太差 - 改成遞迴到最後一層陣列後直接處理，不再往下遞迴
      *
      * @author Mars.Hung <tfaredxj@gmail.com>
      *
@@ -67,9 +67,11 @@ class ArrayHelper
      */
     public static function gatherData($data, $colNameList, $objLv = 1, $dataList = array())
     {
-        $data = (array) $data;
+        // 將物件轉成陣列
+        $data = is_object($data) ? (array)$data : $data;
         
-        if (! empty($data)) {
+        // 遍歷陣列 - 只處理陣列
+        if (is_array($data) && ! empty($data)) {
             if ($objLv > 1) {
                 // === 超過1層 ===
                 foreach ($data as $k => $row) {
