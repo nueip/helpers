@@ -22,10 +22,10 @@ class DatetimeHelper
      */
     public static function getDates($start, $end, $format = "Y-m-d")
     {
-        $start = new DateTime($start);
-        $end = new DateTime($end);
-        $interval = DateInterval::createFromDateString('1 day');
-        $period = new DatePeriod($start, $interval, $end->modify('+1 day'));
+        $start = new \DateTime($start);
+        $end = new \DateTime($end);
+        $interval = \DateInterval::createFromDateString('1 day');
+        $period = new \DatePeriod($start, $interval, $end->modify('+1 day'));
 
         $dates = [];
 
