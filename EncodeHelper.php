@@ -69,9 +69,10 @@ class EncodeHelper
      * @author Mars Hung <tfaredxj@gmail.com>
      * @param string $data
      *            快照資料(snapshot)
+     * @param bool $assoc 回傳格式: 陣列(true) ; 物件(false)
      * @return mixed
      */
-    public static function snapshotDecode(String $data)
+    public static function snapshotDecode(String $data, $assoc = true)
     {
         // 輸出內容初始化
         $opt = '';
@@ -83,10 +84,10 @@ class EncodeHelper
             
             if ($isCompress === '1') {
                 // 有壓縮
-                $opt = json_decode(gzuncompress(base64_decode($data)), 1);
+                $opt = json_decode(gzuncompress(base64_decode($data)), $assoc);
             } else {
                 // 無壓縮
-                $opt = json_decode($data, 1);
+                $opt = json_decode($data, $assoc);
             }
         }
         
