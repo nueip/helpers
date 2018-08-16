@@ -1,6 +1,6 @@
 <?php
 
-namespace nueip\helpers;
+namespace app\helpers;
 
 class DatetimeHelper
 {
@@ -15,7 +15,7 @@ class DatetimeHelper
      *  $start = '2010-01-30';
      *  $end = '2010-02-01';
      *  $format = "Y-m-d";
-     *  $dates = \nueip\helpers\DatetimeHelper::getDates($start, $end, $format);
+     *  $dates = \app\helpers\DatetimeHelper::getDates($start, $end, $format);
      *  // Result: $dates -> (array) ['2010-01-30', '2010-01-31', '2010-02-01'];
      *
      * @return array $dates
