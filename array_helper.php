@@ -108,64 +108,147 @@ class ArrayHelper
 
     /**
      * Groups an array by a given key.
-     *
+     * 
+     * Unable to be grouped by $key, will be skipped
+     * Extend $key to type:array, and group by array element order
+     * 
+     * @auth Nick.Lai, Mars.Hung
      * @param array $array The array to have grouping performed on
-     * @param string $key The key to group or split by
+     * @param string|array $key The key to group or split by
      * @example
      *  $usersDeptData = [
      *      0 => [
      *          'd_sn' => '20',
      *          'u_sn' => '100',
+     *          'date' => '2018-08-01',
      *      ],
      *      1 => [
      *          'd_sn' => '20',
-     *          'u_sn' => '101',
+     *          'u_sn' => '100',
+     *          'date' => '2018-08-02',
      *      ],
      *      2 => [
      *          'd_sn' => '21',
-     *          'u_sn' => '102',
+     *          'u_sn' => '101',
+     *          'date' => '2018-08-01',
      *      ]
      *  ];
+     *  
      *  \nueip\helpers\ArrayHelper::groupBy($usersDeptData, 'd_sn');
      *  result : $usersDeptData = [
      *     '20' => [
      *         0 => [
      *             'd_sn' => '20',
      *             'u_sn' => '100',
+     *             'date' => '2018-08-01',
      *         ],
      *         1 => [
      *             'd_sn' => '20',
-     *             'u_sn' => '101',
+     *             'u_sn' => '100',
+     *             'date' => '2018-08-01',
      *         ],
      *     ],
      *     '21' => [
      *         0 => [
      *             'd_sn' => '21',
-     *             'u_sn' => '100',
+     *             'u_sn' => '101',
+     *             'date' => '2018-08-01',
+     *         ],
+     *     ]
+     *  ];
+     * @example
+     *  $usersDeptData = [
+     *      0 => [
+     *          'd_sn' => '20',
+     *          'u_sn' => '100',
+     *          'date' => '2018-08-01',
+     *      ],
+     *      1 => [
+     *          'd_sn' => '20',
+     *          'u_sn' => '100',
+     *          'date' => '2018-08-02',
+     *      ],
+     *      2 => [
+     *          'd_sn' => '21',
+     *          'u_sn' => '101',
+     *          'date' => '2018-08-01',
+     *      ]
+     *  ];
+     *  
+     *  \nueip\helpers\ArrayHelper::groupBy($usersDeptData, ['d_sn', 'u_sn']);
+     *  result : $usersDeptData = [
+     *     '20' => [
+     *         '100' => [
+     *             0 => [
+     *                 'd_sn' => '20',
+     *                 'u_sn' => '100',
+     *                 'date' => '2018-08-01',
+     *             ],
+     *             1 => [
+     *                 'd_sn' => '20',
+     *                 'u_sn' => '100',
+     *                 'date' => '2018-08-02',
+     *             ],
+     *         ],
+     *     ],
+     *     '21' => [
+     *         '101' => [
+     *             0 => [
+     *                 'd_sn' => '21',
+     *                 'u_sn' => '101',
+     *                 'date' => '2018-08-01',
+     *             ],
      *         ],
      *     ]
      *  ];
      *
      * @return array Returns a multidimensional array
      */
-    public static function groupBy(array &$array, $key)
+    public static function groupBy(array &$array, $keys)
     {
+        // 參數處理
+        $keys = (array)$keys;
+        
         $grouped = [];
 
+        // 遍歷待處理陣列
         foreach ($array as $row) {
-            $valueForKey = null;
-
-            if (is_object($row) && isset($row->{$key})) {
-                $valueForKey = $row->{$key};
-            } elseif (isset($row[$key])) {
-                $valueForKey = $row[$key];
+            // 旗標，是否分組完成
+            $isGgrouped = false;
+            // 分組位置初炲化 - 傳址
+            $gRef = & $grouped;
+            
+            // 遍歷分組陣列 - 建構分組位置
+            foreach ($keys as $key) {
+                $valueForKey = null;
+                
+                // 取得分組用資料 - 從key
+                if (is_object($row) && isset($row->{$key})) {
+                    $valueForKey = $row->{$key};
+                } elseif (isset($row[$key])) {
+                    $valueForKey = $row[$key];
+                }
+                
+                // 有無法被分組的資料，跳出
+                if (is_null($valueForKey)) {
+                    $isGgrouped = false;
+                    break;
+                }
+                
+                // 變更分組位置 - 傳址
+                $gRef = & $gRef[$valueForKey];
+                
+                // 本次分組完成
+                $isGgrouped = true;
             }
-
-            if (is_null($valueForKey)) {
+            
+            // 略過無法被分組的資料
+            if (! $isGgrouped) {
                 continue;
             }
-
-            $grouped[$valueForKey][] = $row;
+            
+            // 將資料寫入分組位置
+            $gRef[] = $row;
         }
 
         return $array = $grouped;
