@@ -15,30 +15,37 @@ class ArrayHelper
 {
     /**
      * Index by Key
-     *
-     * @param array $array Array data for handling
-     * @param string $key  Array key for index key
-     * @param boolean $obj2array Array content convert to array (when object)
-     * @return array Result with indexBy Key
+     * 
+     * @example
+     * \nueip\helpers\ArrayHelper::indexBy($data, 'd_sn');
+     * \nueip\helpers\ArrayHelper::indexBy($data, ['d_sn', 'u_sn']);
+     * 
+     * @param mixed $data Array/stdClass data for handling
+     * @param mixed $keys keys for index key (Array/string)
+     * @param boolean $obj2array stdClass convert to array
+     * @return mixed Result with indexBy Keys
      */
-    public static function indexBy(Array &$array, $key='id', $obj2array = false)
+    public static function indexBy(& $data, $keys, $obj2array = false)
     {
-        $tmp = [];
-
-        foreach ($array as $row) {
-
-            if (is_object($row) && isset($row->$key)) {
-                
-                $tmp[$row->$key] = $obj2array ? (array)$row : $row;
-
-            } 
-            elseif (is_array($row) && isset($row[$key])) {
-
-                $tmp[$row[$key]] = $row;
-            }
-        }
-
-        return $array = $tmp;
+        // Refactor Array $data structure by $keys
+        return self::_refactorBy($data, $keys, $obj2array, $type = 'indexBy');
+    }
+    
+    /**
+     * Index Only by keys, No Data
+     *
+     * @example
+     * \nueip\helpers\ArrayHelper::indexOnly($data, 'd_sn');
+     * \nueip\helpers\ArrayHelper::indexOnly($data, ['d_sn', 'u_sn']);
+     * 
+     * @param array|stdClass $data Array/stdClass data for handling
+     * @param string|array $keys
+     * @param boolean $obj2array Array content convert to array (when object)
+     */
+    public static function indexOnly(& $data, $keys, $obj2array = false)
+    {
+        // Refactor Array $data structure by $keys
+        return self::_refactorBy($data, $keys, $obj2array, $type = 'indexOnly');
     }
     
     /**
@@ -108,66 +115,191 @@ class ArrayHelper
 
     /**
      * Groups an array by a given key.
-     *
+     * 
+     * Unable to be grouped by $key, will be skipped
+     * Extend $key to type:array, and group by array element order
+     * 
+     * @auth Nick.Lai, Mars.Hung
      * @param array $array The array to have grouping performed on
-     * @param string $key The key to group or split by
+     * @param string|array $key The key to group or split by
+     * 
+     * @example
+     * \nueip\helpers\ArrayHelper::groupBy($data, 'd_sn');
+     * \nueip\helpers\ArrayHelper::groupBy($data, ['d_sn', 'u_sn']);
+     * 
      * @example
      *  $usersDeptData = [
      *      0 => [
      *          'd_sn' => '20',
      *          'u_sn' => '100',
+     *          'date' => '2018-08-01',
      *      ],
      *      1 => [
      *          'd_sn' => '20',
-     *          'u_sn' => '101',
+     *          'u_sn' => '100',
+     *          'date' => '2018-08-02',
      *      ],
      *      2 => [
      *          'd_sn' => '21',
-     *          'u_sn' => '102',
+     *          'u_sn' => '101',
+     *          'date' => '2018-08-01',
      *      ]
      *  ];
+     *  
      *  \nueip\helpers\ArrayHelper::groupBy($usersDeptData, 'd_sn');
      *  result : $usersDeptData = [
      *     '20' => [
      *         0 => [
      *             'd_sn' => '20',
      *             'u_sn' => '100',
+     *             'date' => '2018-08-01',
      *         ],
      *         1 => [
      *             'd_sn' => '20',
-     *             'u_sn' => '101',
+     *             'u_sn' => '100',
+     *             'date' => '2018-08-01',
      *         ],
      *     ],
      *     '21' => [
      *         0 => [
      *             'd_sn' => '21',
-     *             'u_sn' => '100',
+     *             'u_sn' => '101',
+     *             'date' => '2018-08-01',
+     *         ],
+     *     ]
+     *  ];
+     * @example
+     *  $usersDeptData = [
+     *      0 => [
+     *          'd_sn' => '20',
+     *          'u_sn' => '100',
+     *          'date' => '2018-08-01',
+     *      ],
+     *      1 => [
+     *          'd_sn' => '20',
+     *          'u_sn' => '100',
+     *          'date' => '2018-08-02',
+     *      ],
+     *      2 => [
+     *          'd_sn' => '21',
+     *          'u_sn' => '101',
+     *          'date' => '2018-08-01',
+     *      ]
+     *  ];
+     *  
+     *  \nueip\helpers\ArrayHelper::groupBy($usersDeptData, ['d_sn', 'u_sn']);
+     *  result : $usersDeptData = [
+     *     '20' => [
+     *         '100' => [
+     *             0 => [
+     *                 'd_sn' => '20',
+     *                 'u_sn' => '100',
+     *                 'date' => '2018-08-01',
+     *             ],
+     *             1 => [
+     *                 'd_sn' => '20',
+     *                 'u_sn' => '100',
+     *                 'date' => '2018-08-02',
+     *             ],
+     *         ],
+     *     ],
+     *     '21' => [
+     *         '101' => [
+     *             0 => [
+     *                 'd_sn' => '21',
+     *                 'u_sn' => '101',
+     *                 'date' => '2018-08-01',
+     *             ],
      *         ],
      *     ]
      *  ];
      *
      * @return array Returns a multidimensional array
      */
-    public static function groupBy(array &$array, $key)
+    public static function groupBy(& $data, $keys, $obj2array = false)
     {
-        $grouped = [];
-
-        foreach ($array as $row) {
-            $valueForKey = null;
-
-            if (is_object($row) && isset($row->{$key})) {
-                $valueForKey = $row->{$key};
-            } elseif (isset($row[$key])) {
-                $valueForKey = $row[$key];
+        // Refactor Array $data structure by $keys
+        return self::_refactorBy($data, $keys, $obj2array, $type = 'groupBy');
+    }
+    
+    /**
+     * **********************************************
+     * ************** Private Function **************
+     * **********************************************
+     */
+    
+    /**
+     * Refactor Array $data structure by $keys
+     * 
+     * @auth Mars.Hung
+     * @see https://github.com/marshung24/helper/blob/master/src/ArrayHelper.php
+     * 
+     * @param array|stdClass $data Array/stdClass data for handling
+     * @param string|array $keys
+     * @param boolean $obj2array Array content convert to array (when object)
+     * @param string $type indexBy(index)/groupBy(group)/only index,no data(indexOnly/noData)
+     */
+    protected static function _refactorBy(& $data, $keys, $obj2array = false, $type = 'index')
+    {
+        // 參數處理
+        $keys = (array)$keys;
+        
+        $result = [];
+        
+        // 遍歷待處理陣列
+        foreach ($data as $row) {
+            // 旗標，是否取得索引
+            $getIndex = false;
+            // 位置初炲化 - 傳址
+            $rRefer = & $result;
+            
+            // 遍歷$keys陣列 - 建構索引位置
+            foreach ($keys as $key) {
+                $vKey = null;
+                
+                // 取得索引資料 - 從$key
+                if (is_object($row) && isset($row->{$key})) {
+                    $vKey = $row->{$key};
+                } elseif (isset($row[$key])) {
+                    $vKey = $row[$key];
+                }
+                
+                // 有無法取得索引資料，跳出
+                if (is_null($vKey)) {
+                    $getIndex = false;
+                    break;
+                }
+                
+                // 變更位置 - 傳址
+                $rRefer = & $rRefer[$vKey];
+                
+                // 本次索引完成
+                $getIndex = true;
             }
-
-            if (is_null($valueForKey)) {
+            
+            // 略過無法取得索引資料
+            if (! $getIndex) {
                 continue;
             }
-
-            $grouped[$valueForKey][] = $row;
+            
+            // 將資料寫入索引位置
+            switch ($type) {
+                case 'index':
+                case 'indexBy':
+                default:
+                    $rRefer = $obj2array ? (array)$row : $row;
+                    break;
+                case 'group':
+                case 'groupBy':
+                    $rRefer[] = $obj2array ? (array)$row : $row;
+                    break;
+                case 'indexOnly':
+                case 'noData':
+                    $rRefer = '';
+                    break;
+            }
         }
-
-        return $array = $grouped;
+        
+        return $data = $result;
     }
 }
