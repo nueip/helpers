@@ -17,9 +17,9 @@ class TextHelper
      *
      * @return string $strs
      */
-    public function convFullBIG5($strs)
+    public static function convFullBIG5($strs)
     {
-        return mb_convert_encoding($this->half2full($strs, 'full'), 'BIG5', 'UTF-8');
+        return mb_convert_encoding(self::half2full($strs, 'full'), 'BIG5', 'UTF-8');
     }
 
     /**
@@ -30,7 +30,7 @@ class TextHelper
      *
      * @return string $strtmp
      */
-    public function half2full($strs, $types = 'full')
+    public static function half2full($strs, $types = 'full')
     {
         $nt = array(
             '(', ')', '[', ']', '{', '}', '.', ',', ';', ':',
