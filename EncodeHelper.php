@@ -20,10 +20,11 @@ class EncodeHelper
      * 1. 為支援快照資料(snapshot)儲存，將特定資料建構成資料陣列後，給予壓縮，以節省空間
      * 2. 如果資料量小，無壓縮效率
      * 3. 判斷是否有壓縮
-     * - 有壓縮：字串第1個字元是1
+     * - 有壓縮：字串第1個字元是2 (gzdeflate/gzinflate)
+     * - 有壓縮：字串第1個字元是1 (gzcompress/gzuncompress)
      * - 無壓縮：字串第1個字元是0
      * 4. 本函式只處理陣列，故選用json_encode,json_decode
-     *
+     * 
      * @author Mars Hung <tfaredxj@gmail.com>
      * @param array|mixed $data
      *            資料陣列
@@ -39,17 +40,18 @@ class EncodeHelper
         // 壓縮處理
         if ($forceCompress) {
             // 強制壓縮
-            $opt = '1' . base64_encode(gzcompress(json_encode($data)));
+            $opt = '2' . base64_encode(gzdeflate(json_encode($data)));
         } else {
             // 不強制壓縮
             $json = json_encode($data);
-            $zip = base64_encode(gzcompress($json));
+            $zip = base64_encode(gzdeflate($json));
+            
             if (strlen($json) <= strlen($zip)) {
                 // 無壓縮必要
                 $opt = '0' . $json;
             } else {
                 // 有壓縮必要
-                $opt = '1' . $zip;
+                $opt = '2' . $zip;
             }
         }
         
@@ -62,7 +64,8 @@ class EncodeHelper
      * 1. 為支援快照資料(snapshot)儲存，將特定資料建構成資料陣列後，給予壓縮，以節省空間
      * 2. 如果資料量小，無壓縮效率
      * 3. 判斷是否有壓縮
-     * - 有壓縮：字串第1個字元是1
+     * - 有壓縮：字串第1個字元是2 (gzdeflate/gzinflate)
+     * - 有壓縮：字串第1個字元是1 (gzcompress/gzuncompress)
      * - 無壓縮：字串第1個字元是0
      * 4. 本函式只處理陣列，故選用json_encode,json_decode
      * 
@@ -80,14 +83,24 @@ class EncodeHelper
         if ($data !== '') {
             // 拆解內容 - 是否壓縮、真實資料
             $isCompress = substr($data, 0, 1);
-            $data = substr($data, 1);
+            $rData = substr($data, 1);
             
-            if ($isCompress === '1') {
-                // 有壓縮
-                $opt = json_decode(gzuncompress(base64_decode($data)), $assoc);
-            } else {
-                // 無壓縮
-                $opt = json_decode($data, $assoc);
+            switch ($isCompress) {
+                case '0':
+                    // 無壓縮
+                    $opt = json_decode($rData, $assoc);
+                    break;
+                case '1':
+                    // 有壓縮 gzcompress (舊)
+                    $opt = json_decode(gzuncompress(base64_decode($rData)), $assoc);
+                    break;
+                case '2':
+                    // 有壓縮 gzdeflate
+                    $opt = json_decode(gzinflate(base64_decode($rData)), $assoc);
+                    break;
+                default:
+                    // 異常，不處理
+                    $opt = $data;
             }
         }
         
