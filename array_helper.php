@@ -119,7 +119,7 @@ class ArrayHelper
      * Unable to be grouped by $key, will be skipped
      * Extend $key to type:array, and group by array element order
      * 
-     * @auth Nick.Lai, Mars.Hung
+     * @author Nick.Lai, Mars.Hung
      * @param array $array The array to have grouping performed on
      * @param string|array $key The key to group or split by
      * 
@@ -220,6 +220,37 @@ class ArrayHelper
     {
         // Refactor Array $data structure by $keys
         return self::_refactorBy($data, $keys, $obj2array, $type = 'groupBy');
+    }
+    
+    /**
+     * 資料遞迴比較
+     * 
+     * @example
+     * \nueip\helpers\ArrayHelper::diffRecursive($newData, $oldData);
+     * 
+    *  @author Gunter Chou
+     * @param array $Comparative
+     * @param array $Comparison
+     * @return array $outputDiff Result diff data
+     */
+    public static function diffRecursive($Comparative, $Comparison)
+    {
+        $outputDiff = [];
+        foreach ($Comparative as $key => $value) {
+            if (array_key_exists($key, $Comparison)) {
+                if (is_array($value)) {
+                    $recursiveDiff = self::diffRecursive($value, $Comparison[$key]);
+                    if (!empty($recursiveDiff)) {
+                        $outputDiff[$key] = $recursiveDiff;
+                    }
+                } elseif (!in_array($value, $Comparison)) {
+                    $outputDiff[$key] = $value;
+                }
+            } elseif (!in_array($value, $Comparison)) {
+                $outputDiff[$key] = $value;
+            }
+        }
+        return $outputDiff;
     }
     
     /**
