@@ -48,4 +48,35 @@ class DateTimeHelper
 
         return ($outputFormat) ? date($outputFormat, $result) : $result;
     }
+    
+    /**
+     * 取得日期迭代器 - 以日為單位迭代日期
+     *
+     * Usage:
+     * $daterange = \app\helpers\DateTimeHelper::dateIterator('2018-01-01', '2018-01-31');
+     * foreach($daterange as $date){
+     *     echo $date->format("Y-m-d") . "<br>";
+     * }
+     * 
+     * @author  Mars Hung
+     * 
+     * @param date $start
+     *            開始日期
+     * @param date $end
+     *            結束日期
+     * @return DateTime
+     */
+    public static function dateIterator($start, $end)
+    {
+        $start = new \DateTime($start);
+        $end = new \DateTime($end);
+        $end = $end->modify('+1 day');
+        
+        $interval = new \DateInterval('P1D');
+        $daterange = new \DatePeriod($start, $interval, $end);
+        
+        return $daterange;
+    }
+    
+    
 }
