@@ -78,5 +78,19 @@ class DateTimeHelper
         return $daterange;
     }
     
+    /**
+     * 取得日期的星期
+     * 
+     * 因本系統的星期定義跟PHP定義不同，因此需有本處理函式
+     * 一(1)、二(2)、三(3)、四(4)、五(5)、六(6)、日(7)
+     * 
+     * @param date $date
+     * @return string
+     */
+    public static function dateWeekday($date)
+    {
+        $wDay = date('w', strtotime($date));
+        return $wDay != '0' ? $wDay : '7';
+    }
     
 }
