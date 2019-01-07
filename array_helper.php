@@ -291,7 +291,7 @@ class ArrayHelper
                 // 取得索引資料 - 從$key
                 if (is_object($row) && isset($row->{$key})) {
                     $vKey = $row->{$key};
-                } elseif (isset($row[$key])) {
+                } elseif (is_array($row) && isset($row[$key])) {
                     $vKey = $row[$key];
                 }
                 
