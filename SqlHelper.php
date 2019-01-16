@@ -12,6 +12,9 @@ class SqlHelper
     /**
      * 協助處理array chunk SQL指令
      * 
+     * 當 $snList 為空時，會將查詢結果設為空，
+     * 如需要例外處理，請自行在函式外檢查判斷。
+     * 
      * Usage:
      * \app\helpers\SqlHelper::whereInChunk($columnName, $snList, $queryBuilder = null, $size = 300);
      * 
@@ -37,6 +40,9 @@ class SqlHelper
             }
             
             $queryBuilder->group_end();
+        } else {
+            // 空陣列時，將查詢結果設為空
+            $queryBuilder->where(1, 0);
         }
     }
 }
