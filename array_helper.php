@@ -49,6 +49,37 @@ class ArrayHelper
     }
     
     /**
+     * Get Data content by index
+     *
+     * Usage:
+     * - $data = ['user' => ['name' => 'Mars', 'birthday' => '2000-01-01']];
+     * - var_export(getContent($data)); // full $data content
+     * - var_export(getContent($data, 'user')); // ['name' => 'Mars', 'birthday' => '2000-01-01']
+     * - echo getContent($data, ['user', 'name']); // Mars
+     * 
+     * @param array $data
+     * @param array|string $indexTo Content index of the data you want to get
+     * @return array
+     */
+    public static function getContent(Array $data, $indexTo = [])
+    {
+        //* Arguments prepare */
+        $indexTo = (array)$indexTo;
+        
+        foreach ($indexTo as $idx) {
+            if (is_array($data) && array_key_exists($idx, $data)) {
+                // If exists, Get values by recursion
+                $data = $data[$idx];
+            } else {
+                $data = [];
+                break;
+            }
+        }
+        
+        return $data;
+    }
+    
+    /**
      * 從目標資料中的指定欄位搜集資料，並組成陣列清單
      *
      * 資料陣列，格式：array(stdClass|array usersInfo1, stdClass|array usersInfo2, stdClass|array usersInfo3, ............);
@@ -254,6 +285,37 @@ class ArrayHelper
     }
     
     /**
+     * Array Sort Recursive
+     *
+     * @param array $srcArray
+     * @param string $type ksort(default), krsort, sort, rsort
+     */
+    public static function arraySortRecursive(Array & $srcArray, $type = 'ksort')
+    {
+        // Run ksort(default), krsort, sort, rsort
+        switch($type) {
+            case 'ksort':
+            default:
+                ksort($srcArray);
+                break;
+            case 'krsort':
+                krsort($srcArray);
+                break;
+            case 'sort':
+                sort($srcArray);
+                break;
+            case 'rsort':
+                rsort($srcArray);
+                break;
+        }
+        
+        // If child element is array, recursive
+        foreach ($srcArray as $key => & $value) {
+            is_array($value) && self::arraySortRecursive($value, $type);
+        }
+    }
+    
+    /**
      * **********************************************
      * ************** Private Function **************
      * **********************************************
@@ -283,6 +345,8 @@ class ArrayHelper
             $getIndex = false;
             // 位置初炲化 - 傳址
             $rRefer = & $result;
+            // 可用的index清單
+            $indexs = [];
             
             // 遍歷$keys陣列 - 建構索引位置
             foreach ($keys as $key) {
@@ -301,16 +365,21 @@ class ArrayHelper
                     break;
                 }
                 
-                // 變更位置 - 傳址
-                $rRefer = & $rRefer[$vKey];
+                // 記錄可用的index
+                $indexs[] = $vKey;
                 
                 // 本次索引完成
                 $getIndex = true;
             }
             
-            // 略過無法取得索引資料
+            // 略過無法取得索引或索引不完整的資料
             if (! $getIndex) {
                 continue;
+            }
+            
+            // 變更位置 - 傳址
+            foreach ($indexs as $idx) {
+                $rRefer = & $rRefer[$idx];
             }
             
             // 將資料寫入索引位置
