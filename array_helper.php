@@ -290,7 +290,7 @@ class ArrayHelper
      * @param array $srcArray
      * @param string $type ksort(default), krsort, sort, rsort
      */
-    public static function arraySortRecursive(Array & $srcArray, $type = 'ksort')
+    public static function sortRecursive(Array & $srcArray, $type = 'ksort')
     {
         // Run ksort(default), krsort, sort, rsort
         switch($type) {
@@ -311,7 +311,7 @@ class ArrayHelper
         
         // If child element is array, recursive
         foreach ($srcArray as $key => & $value) {
-            is_array($value) && self::arraySortRecursive($value, $type);
+            is_array($value) && self::sortRecursive($value, $type);
         }
     }
     
