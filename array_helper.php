@@ -88,7 +88,7 @@ class ArrayHelper
      * @param mixed $search
      * @return mixed
      */
-    private static function getClosest($array, $search)
+    public static function getClosest($array, $search)
     {
         $closest = null;
 
@@ -114,7 +114,7 @@ class ArrayHelper
      * @param mixed $search
      * @return mixed
      */
-    private static function getClosestLess($array, $search)
+    public static function getClosestLess($array, $search)
     {
         $closest = null;
 
