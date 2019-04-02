@@ -78,7 +78,59 @@ class ArrayHelper
         
         return $data;
     }
-    
+
+    /**
+     * Get Closest Numeric Value
+     * 
+     * @author Gunter Chou
+     * 
+     * @param array $array
+     * @param mixed $search
+     * @return mixed
+     */
+    private static function getClosest($array, $search)
+    {
+        $closest = null;
+
+        foreach ($array as $item) {
+
+            if (!is_numeric($item)) continue;
+
+            if ($closest === null || abs($search - $closest) > abs($search - $item)) {
+                $closest = $item;
+            }
+
+        }
+
+        return $closest;
+    }
+
+    /**
+     * Get Less than closest Numeric Value
+     * 
+     * @author Gunter Chou
+     * 
+     * @param array $array
+     * @param mixed $search
+     * @return mixed
+     */
+    private static function getClosestLess($array, $search)
+    {
+        $closest = null;
+
+        foreach ($array as $item) {
+
+            if (!is_numeric($item)) continue;
+
+            if ($closest === null || ($search >= $item && $search - $closest > $search - $item)) {
+                $closest = $item;
+            }
+
+        }
+
+        return $closest;
+    }
+
     /**
      * 從目標資料中的指定欄位搜集資料，並組成陣列清單
      *
