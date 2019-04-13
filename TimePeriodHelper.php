@@ -8,11 +8,16 @@ use marsapp\helper\timeperiod\TimePeriodHelper as tpHelper;
  * 
  * 時間段處理函式庫
  * 
+ * 備註：
  * 1. 格式: $timePeriods = [[$startDatetime1, $endDatetime1], [$startDatetime2, $endDatetime2], ...];
- * - $Datetime = Y-m-d H:i:s ; Y-m-d H:i:00 ; Y-m-d H:00:00 ;
+ * - - $Datetime = Y-m-d H:i:s ; Y-m-d H:i:00 ; Y-m-d H:00:00 ;
  * 2. 如果時間單位為 hour/minute/second, 結束時間點通常不被包含的, 例如, 工作時間8點到9點是1小時
  * 3. 如果時間單位為 day/month/year, 結束時間通常會被包含的, 例如, 1月到3月是三個月
  * 4. 處理時，假設數資料式正確。 如有必要，才使用驗證功能來驗證資料。
+ * 5. 通過保持$timePeriods格式正確來確保效能：
+ * - a. 獲取原始$timePeriods時，請通過filter()，union()對其進行過濾&整理。
+ * - b. 僅使用TimePeriodHelper提供的函數處理$timePeriods(不會破壞格式，排序)
+ * - c. 當您完成上述兩個操作時，可以關閉自動排序( TimePeriodHelper::setSortOut(false) )以提高效能。
  * 
  * @author Mars Hung <tfaredxj@gmail.com>
  * @see https://github.com/marshung24/TimePeriodHelper
@@ -29,9 +34,11 @@ class TimePeriodHelper
     /**
      * 時間段排序 (正序)
      *
-     * When sorting, sort the start time first, if the start time is the same, then sort the end time
-     * 排序優先序：先排開始時間，再排結束時間
-     *
+     * 1. When sorting, sort the start time first, if the start time is the same, then sort the end time
+     * 2. 排序優先序：先排開始時間，再排結束時間
+     * 
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
      * @return array
      */
@@ -43,10 +50,11 @@ class TimePeriodHelper
     /**
      * 時間段聯集
      *
-     * 排序+合併有接觸的時間段
+     * 1. 排序+合併有接觸的時間段
+     * 2. 範例：TimePeriodHelper::union($timePeriods1, $timePeriods2, $timePeriods3, ......);
      *
-     * TimePeriodHelper::union($timePeriods1, $timePeriods2, $timePeriods3, ......);
-     *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
      * @return array
      */
@@ -58,41 +66,47 @@ class TimePeriodHelper
     /**
      * 時間段差集
      *
-     * Compares $timePeriods1 against $timePeriods2 and returns the values in $timePeriods1 that are not present in $timePeriods2.
+     * 1. Compares $timePeriods1 against $timePeriods2 and returns the values in $timePeriods1 that are not present in $timePeriods2.
+     * 2. 範例：TimePeriodHelper::diff($timePeriods1, $timePeriods2);
+     * 3. $timePeriods是否已整理將影響結果的正確性。 請參閱註釋5.通過保持$timePeriods格式正確來確保效能。
      *
-     * TimePeriodHelper::diff($timePeriods1, $timePeriods2, $sortOut);
-     *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods1
      * @param array $timePeriods2
-     * @param bool $sortOut 如果能保証傳入的時間段已處理過union，可將本參數關閉，以提升效能
      * @return array
      */
-    public static function diff(Array $timePeriods1, Array $timePeriods2, $sortOut = true)
+    public static function diff(Array $timePeriods1, Array $timePeriods2)
     {
-        return tpHelper::diff($timePeriods1, $timePeriods2, $sortOut);
+        return tpHelper::diff($timePeriods1, $timePeriods2);
     }
     
     /**
      * 時間段交集
-     *
+     * 
+     * 1. 範例：TimePeriodHelper::intersect($timePeriods1, $timePeriods2);
+     * 2. $timePeriods是否已整理將影響結果的正確性。 請參閱註釋5.通過保持$timePeriods格式正確來確保效能。
+     * 
+     * @author Mars Hung
+     * 
      * @param array $timePeriods1
      * @param array $timePeriods2
-     * @param bool $sortOut 如果能保証傳入的時間段已處理過union，可將本參數關閉，以提升效能
      * @return array
      */
-    public static function intersect(Array $timePeriods1, Array $timePeriods2, $sortOut = true)
+    public static function intersect(Array $timePeriods1, Array $timePeriods2)
     {
-        return tpHelper::intersect($timePeriods1, $timePeriods2, $sortOut);
+        return tpHelper::intersect($timePeriods1, $timePeriods2);
     }
     
     /**
      * 時間段是否有交集
      *
-     * Determine if there is overlap between the two time periods
+     * 1. Determine if there is overlap between the two time periods
+     * 2. Only when there is no intersection, no data is needed.
+     * 3. Logic is similar to intersect.
      *
-     * Only when there is no intersection, no data is needed.
-     * Logic is similar to intersect.
-     *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods1
      * @param array $timePeriods2
      * @return bool
@@ -107,6 +121,8 @@ class TimePeriodHelper
      *
      * Leaving only the first start time and the last end time
      *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
      * @return array
      */
@@ -117,35 +133,46 @@ class TimePeriodHelper
     
     /**
      * 時間段間隙
-     *
+     * 
+     * 1. $timePeriods是否已整理將影響結果的正確性。 請參閱註釋5.通過保持$timePeriods格式正確來確保效能。
+     * 
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
-     * @param bool $sortOut 如果能保証傳入的時間段已處理過union，可將本參數關閉，以提升效能
      * @return array
      */
-    public static function gap(Array $timePeriods, $sortOut = true)
+    public static function gap(Array $timePeriods)
     {
-        return tpHelper::gap($timePeriods, $sortOut);
+        return tpHelper::gap($timePeriods);
     }
     
     /**
      * 計算時間段的總時間
      *
-     * 可使用函式setUnit()指定計算單位(預設:秒)
+     * 1. 可使用函式setUnit()指定計算單位(預設:秒)
+     * 2. $timePeriods是否已整理將影響結果的正確性。 請參閱註釋5.通過保持$timePeriods格式正確來確保效能。
+     * 3. 進似值取法：無條件捨去
      *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
-     * @param bool $sortOut 如果能保証傳入的時間段已處理過union，可將本參數關閉，以提升效能
+     * @param int $precision
+     *            小數精度位數
      * @return number
      */
-    public static function time(Array $timePeriods, $sortOut = true)
+    public static function time(Array $timePeriods, $precision = 0)
     {
-        return tpHelper::time($timePeriods, $sortOut);
+        return tpHelper::time($timePeriods, $precision);
     }
     
     /**
      * 裁剪時間段-依指定時間長度
      *
-     * 可使用函式setUnit()指定計算單位(預設:秒)
+     * 1. 可使用函式setUnit()指定計算單位(預設:秒)
+     * 2. $timePeriods是否已整理將影響結果的正確性。 請參閱註釋5.通過保持$timePeriods格式正確來確保效能。
      *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
      * @param number $time
      *            時間長度
@@ -161,8 +188,11 @@ class TimePeriodHelper
     /**
      * 延伸時間段
      *
-     * 可使用函式setUnit()指定計算單位(預設:秒)
+     * 1. 可使用函式setUnit()指定計算單位(預設:秒)
+     * 2. $timePeriods是否已整理將影響結果的正確性。 請參閱註釋5.通過保持$timePeriods格式正確來確保效能。
      *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
      * @param number $time
      *            時間長度
@@ -178,8 +208,11 @@ class TimePeriodHelper
     /**
      * 縮短時間段
      *
-     * 可使用函式setUnit()指定計算單位(預設:秒)
+     * 1. 可使用函式setUnit()指定計算單位(預設:秒)
+     * 2. $timePeriods是否已整理將影響結果的正確性。 請參閱註釋5.通過保持$timePeriods格式正確來確保效能。
      *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
      * @param number $time
      *            時間長度
@@ -198,6 +231,8 @@ class TimePeriodHelper
      * 如原本時間段格式為 Y-m-d H:i:s 時，指定轉換單位為 minute 時，會變成 Y-m-d H:i:00
      * 如原本時間段格式為 Y-m-d H:i:s 時，指定轉換單位為 hour 時，會變成 Y-m-d H:00:00
      * 
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
      * @param string $unit 時間單位 (hour, minute, second)
      * @return array
@@ -212,6 +247,8 @@ class TimePeriodHelper
      *
      * 驗証格式、大小、時間
      *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
      * @throws \Exception
      * @return bool
@@ -227,6 +264,8 @@ class TimePeriodHelper
      * 1. 驗証格式、大小、時間, 移除錯誤的資料(不報錯)
      * 2. 處理時間進位問題, 例： 2019-01-01 24:00:00 => 2019-01-02 00:00:00
      *
+     * @author Mars Hung
+     * 
      * @param array $timePeriods
      * @param bool $exception 有錯誤時，是否丟出例外(預設false)
      * @throws \Exception
@@ -247,9 +286,12 @@ class TimePeriodHelper
     
     /**
      * 設定時間處理單位
+     * 
+     * 1. 作用域：全域
+     * 2. hour, minute, second
      *
-     * hour, minute, second
-     *
+     * @author Mars Hung
+     * 
      * @param string $unit
      * @param string $target Specify function,or all functions
      * @throws \Exception
@@ -263,6 +305,8 @@ class TimePeriodHelper
     /**
      * 取得時間處理單位
      *
+     * @author Mars Hung
+     * 
      * @param string $target Specify function's unit (time, format)
      * @throws \Exception
      * @return string
@@ -275,7 +319,12 @@ class TimePeriodHelper
     /**
      * 設定過濾參數-是否濾時間格式
      * 
-     * 影響函式 filter(), validate()
+     * 1. 作用域：全域
+     * 2. 如果您不想過濾日期時間格式，請將其設置為false。
+     * 3. 也許時間格式不是Y-m-d H：i：s（例如Y-m-d H：i），你需要關閉它。
+     * 4. 影響函式 filter(), validate()
+     * 
+     * @author Mars Hung
      * 
      * @param bool $bool
      * @return $this
@@ -288,11 +337,41 @@ class TimePeriodHelper
     /**
      * 取得過濾參數-是否濾時間格式
      *
+     * @author Mars Hung
+     * 
      * @return bool
      */
     public static function getFilterDatetime()
     {
         return tpHelper::getFilterDatetime();
+    }
+    
+    /**
+     * 設定自動整理時間段參數
+     *
+     * 1. 作用域：全域
+     * 2. 在函數處理之前，將自動使用union()重整$timePeriods格式。
+     *
+     * @author Mars Hung
+     * 
+     * @param bool $bool 自動(true)、手動(false) default true
+     * @return $this
+     */
+    public static function setSortOut($bool = true)
+    {
+        return tpHelper::setSortOut($bool);
+    }
+    
+    /**
+     * 取得自動整理參數
+     *
+     * @author Mars Hung
+     * 
+     * @return bool
+     */
+    public static function getSortOut()
+    {
+        return tpHelper::getSortOut();
     }
     
     /**
