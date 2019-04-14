@@ -74,11 +74,12 @@ class TimePeriodHelper
      * 
      * @param array $timePeriods1
      * @param array $timePeriods2
+     * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function diff(Array $timePeriods1, Array $timePeriods2)
+    public static function diff(Array $timePeriods1, Array $timePeriods2, $sortOut = 'default')
     {
-        return tpHelper::diff($timePeriods1, $timePeriods2);
+        return tpHelper::diff($timePeriods1, $timePeriods2, $sortOut);
     }
     
     /**
@@ -91,11 +92,12 @@ class TimePeriodHelper
      * 
      * @param array $timePeriods1
      * @param array $timePeriods2
+     * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function intersect(Array $timePeriods1, Array $timePeriods2)
+    public static function intersect(Array $timePeriods1, Array $timePeriods2, $sortOut = 'default')
     {
-        return tpHelper::intersect($timePeriods1, $timePeriods2);
+        return tpHelper::intersect($timePeriods1, $timePeriods2, $sortOut);
     }
     
     /**
@@ -139,11 +141,12 @@ class TimePeriodHelper
      * @author Mars Hung
      * 
      * @param array $timePeriods
+     * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function gap(Array $timePeriods)
+    public static function gap(Array $timePeriods, $sortOut = 'default')
     {
-        return tpHelper::gap($timePeriods);
+        return tpHelper::gap($timePeriods, $sortOut);
     }
     
     /**
@@ -158,11 +161,12 @@ class TimePeriodHelper
      * @param array $timePeriods
      * @param int $precision
      *            小數精度位數
+     * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return number
      */
-    public static function time(Array $timePeriods, $precision = 0)
+    public static function time(Array $timePeriods, $precision = 0, $sortOut = 'default')
     {
-        return tpHelper::time($timePeriods, $precision);
+        return tpHelper::time($timePeriods, $precision, $sortOut);
     }
     
     /**
@@ -178,11 +182,12 @@ class TimePeriodHelper
      *            時間長度
      * @param string $extension
      *            如是 時間長度 超過 時間段的總時間，是否延伸時間段(預設false)
+     * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function cut(Array $timePeriods, $time, $extension = false)
+    public static function cut(Array $timePeriods, $time, $extension = false, $sortOut = 'default')
     {
-        return tpHelper::cut($timePeriods, $time, $extension);
+        return tpHelper::cut($timePeriods, $time, $extension, $sortOut);
     }
     
     /**
@@ -198,11 +203,12 @@ class TimePeriodHelper
      *            時間長度
      * @param number $interval
      *            延伸時間段與原時間段間隔(預設:0)
+     * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function extend(Array $timePeriods, $time, $interval = 0)
+    public static function extend(Array $timePeriods, $time, $interval = 0, $sortOut = 'default')
     {
-        return tpHelper::extend($timePeriods, $time, $interval);
+        return tpHelper::extend($timePeriods, $time, $interval, $sortOut);
     }
     
     /**
@@ -218,11 +224,12 @@ class TimePeriodHelper
      *            時間長度
      * @param bool $crossperiod
      *            是否跨時間段(預設true)
+     * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function shorten(Array $timePeriods, $time, $crossperiod = true)
+    public static function shorten(Array $timePeriods, $time, $crossperiod = true, $sortOut = 'default')
     {
-        return tpHelper::shorten($timePeriods, $time, $crossperiod);
+        return tpHelper::shorten($timePeriods, $time, $crossperiod, $sortOut);
     }
     
     /**
