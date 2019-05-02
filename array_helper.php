@@ -304,7 +304,37 @@ class ArrayHelper
         // Refactor Array $data structure by $keys
         return self::_refactorBy($data, $keys, $obj2array, $type = 'groupBy');
     }
-    
+
+    /**
+     * Filter an array by a given key.
+     * 
+     * @example
+     * \nueip\helpers\ArrayHelper::filterKey($data, ['s_sn', 'u_sn', 'remark']);
+     * \nueip\helpers\ArrayHelper::filterKey($data, 's_sn, u_sn, remark']);
+     * 
+     * @author Gunter.Chou
+     * @param array
+     * @param array|string $keys
+     * 
+     * @return array
+     */
+    public static function filterKey(array $data, $keys)
+    {
+        if (is_string($keys)) {
+            $keys = explode(',', $keys);
+        }
+
+        return array_map(function ($row) use ($keys) {
+            $result = [];
+            foreach($keys as $key){
+                if (isset($row[$key])) {
+                    $result[$key] = $row[$key];
+                }
+            }
+            return $result;
+        }, $data);
+    }
+
     /**
      * 資料遞迴比較
      * 
