@@ -1,0 +1,90 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "b9635ac6843985910bbeab07fd667802",
+    "packages": [
+        {
+            "name": "marsapp/devtools",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marshung24/DevTools.git",
+                "reference": "15cfb0eaf34a75fbc6dbb19b76c11757adc0715d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marshung24/DevTools/zipball/15cfb0eaf34a75fbc6dbb19b76c11757adc0715d",
+                "reference": "15cfb0eaf34a75fbc6dbb19b76c11757adc0715d",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "marsapp\\dev\\tools\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mars Hung",
+                    "email": "tfaredxj@gmail.com"
+                }
+            ],
+            "description": "Dev Tools",
+            "homepage": "https://github.com/marshung24/DevTools",
+            "time": "2019-03-28T15:18:10+00:00"
+        },
+        {
+            "name": "marsapp/timeperiodhelper",
+            "version": "0.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marshung24/TimePeriodHelper.git",
+                "reference": "e2a510bd3c92980fa9f712d5261f83ad15613894"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marshung24/TimePeriodHelper/zipball/e2a510bd3c92980fa9f712d5261f83ad15613894",
+                "reference": "e2a510bd3c92980fa9f712d5261f83ad15613894",
+                "shasum": ""
+            },
+            "require-dev": {
+                "marsapp/devtools": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "marsapp\\helper\\timeperiod\\": "src",
+                    "marsapp\\helper\\test\\timeperiod\\": "test"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mars Hung",
+                    "email": "tfaredxj@gmail.com"
+                }
+            ],
+            "description": "TimePeriodHelper library provides functions such as sorting, union, difference, intersection, and calculation time.",
+            "homepage": "https://github.com/marshung24/TimePeriodHelper",
+            "time": "2019-05-02T12:41:01+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

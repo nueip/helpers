@@ -1,11 +1,9 @@
 <?php
 
-namespace app\helpers;
+namespace nueip\helpers;
 
 /**
  * DateTime helper
- * 
- * @author  Nick Tsai
  */
 class DateTimeHelper
 {
@@ -16,11 +14,12 @@ class DateTimeHelper
      * @param string $end
      * @param string $format
      *
+     * @author  Nick Lai
      * @example
      *  $start = '2010-01-30';
      *  $end = '2010-02-01';
      *  $format = "Y-m-d";
-     *  $dates = \app\helpers\DateTimeHelper::getDates($start, $end, $format);
+     *  $dates = \nueip\helpers\DateTimeHelper::getDates($start, $end, $format);
      *  // Result: $dates -> (array) ['2010-01-30', '2010-01-31', '2010-02-01'];
      *
      * @return array $dates
@@ -85,7 +84,7 @@ class DateTimeHelper
      * 取得日期迭代器 - 以日為單位迭代日期
      *
      * Usage:
-     * $daterange = \app\helpers\DateTimeHelper::dateIterator('2018-01-01', '2018-01-31');
+     * $daterange = \nueip\helpers\DateTimeHelper::dateIterator('2018-01-01', '2018-01-31');
      * foreach($daterange as $date){
      *     echo $date->format("Y-m-d") . "<br>";
      * }

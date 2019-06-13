@@ -1,0 +1,23 @@
+{
+    "name": "nueip/helpers",
+    "description": "NuEIP Helpers.",
+    "homepage": "https://github.com/nueip/helpers",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "RD Team",
+            "email": "nueip945ad@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "nueip\\helpers\\": "src", "nueip\\helpers\\test\\": "test"}
+    },
+    "minimum-stability": "stable",
+    "require-dev": {
+        "marsapp/devtools": "*"
+    },
+    "require": {
+        "marsapp/timeperiodhelper": "*"
+    }
+}

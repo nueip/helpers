@@ -1,9 +1,9 @@
 <?php
 
-namespace app\helpers;
+namespace nueip\helpers;
 
 /**
- * SQL Helper
+ * SQL Helper for CodeIgniter 3
  * 
  * @author  Mars Hung
  */
@@ -16,7 +16,7 @@ class SqlHelper
      * 如需要例外處理，請自行在函式外檢查判斷。
      * 
      * Usage:
-     * \app\helpers\SqlHelper::whereInChunk($columnName, $snList, $queryBuilder = null, $size = 300);
+     * \nueip\helpers\SqlHelper::whereInChunk($columnName, $snList, $queryBuilder = null, $size = 300);
      * 
      * @param string $columnName 欄位名稱
      * @param array $snList 資料陣列

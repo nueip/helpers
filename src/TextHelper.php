@@ -1,5 +1,5 @@
 <?php
-namespace app\helpers;
+namespace nueip\helpers;
 
 /**
  * Text Helper

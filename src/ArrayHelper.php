@@ -5,9 +5,6 @@ namespace nueip\helpers;
 /**
  * Array Helper
  *
- * @author  Nick Tsai <myintaer@gmail.com>
- * @version 1.0.0
- * @see     https://github.com/yidas/php-helpers
  * @example 
  *  \nueip\helpers\ArrayHelper::indexBy($modelData, 's_sn');
  */

@@ -1,5 +1,5 @@
 <?php
-namespace app\helpers;
+namespace nueip\helpers;
 
 /**
  * Encode Helper
@@ -7,8 +7,8 @@ namespace app\helpers;
  * @author Mars Hung <tfaredxj@gmail.com>
  * @example <br>
  *          1. Snapshot encode(zip) & decode(unzip) <br>
- *          - encode: $snapshot = \app\helpers\EncodeHelper::snapshotEncode($data); <br>
- *          - decode: $data = \app\helpers\EncodeHelper::snapshotDecode($snapshot); <br>
+ *          - encode: $snapshot = \nueip\helpers\EncodeHelper::snapshotEncode($data); <br>
+ *          - decode: $data = \nueip\helpers\EncodeHelper::snapshotDecode($snapshot); <br>
  *         
  */
 class EncodeHelper

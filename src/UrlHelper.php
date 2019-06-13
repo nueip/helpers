@@ -1,6 +1,6 @@
 <?php
 
-namespace app\helpers;
+namespace nueip\helpers;
 
 /**
  * Url Helper
@@ -15,10 +15,10 @@ class UrlHelper
      * @param array $segments
      * 
      * @example 
-     *  \app\helpers\UrlHelper::safeMergeSegments(['https://example.com/', '/first/second/', '////user_profile//', 'show/200'])
+     *  \nueip\helpers\UrlHelper::safeMergeSegments(['https://example.com/', '/first/second/', '////user_profile//', 'show/200'])
      *    result -> 'https://example.com/first/second/user_profile/show/200'
      * 
-     *  \app\helpers\UrlHelper::safeMergeSegments(['//https://example.com/', '/test//'], true)
+     *  \nueip\helpers\UrlHelper::safeMergeSegments(['//https://example.com/', '/test//'], true)
      *    result -> 'https://example.com/test'
      *
      * @return string URI

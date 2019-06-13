@@ -1,5 +1,5 @@
 <?php
-namespace app\helpers;
+namespace nueip\helpers;
 
 /**
  * Validate Helper
@@ -19,8 +19,6 @@ class ValidateHelper
 
     /**
      * Validate Object
-     *
-     * @var unknown
      */
     protected static $_gump = null;
 
