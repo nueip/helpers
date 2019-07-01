@@ -333,7 +333,7 @@ class ArrayHelper
     }
 
     /**
-     * 資料遞迴比較
+     * Array Diff Recursive
      * 
      * @example
      * \nueip\helpers\ArrayHelper::diffRecursive($newData, $oldData);
@@ -353,10 +353,10 @@ class ArrayHelper
                     if (!empty($recursiveDiff)) {
                         $outputDiff[$key] = $recursiveDiff;
                     }
-                } elseif (!in_array($value, $Comparison)) {
+                } elseif (!in_array($value, $Comparison, true) || $value !== $Comparison[$key]) {
                     $outputDiff[$key] = $value;
                 }
-            } elseif (!in_array($value, $Comparison)) {
+            } elseif (!in_array($value, $Comparison, true)) {
                 $outputDiff[$key] = $value;
             }
         }
