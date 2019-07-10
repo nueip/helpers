@@ -15,7 +15,6 @@
     },
     "minimum-stability": "stable",
     "require-dev": {
-        "marsapp/devtools": "*"
     },
     "require": {
         "marsapp/timeperiodhelper": "*"

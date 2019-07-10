@@ -1,4 +1,5 @@
 <?php
+
 namespace nueip\helpers;
 
 /**
@@ -36,7 +37,7 @@ class EncodeHelper
     {
         // 輸出內容初始化
         $opt = '';
-        
+
         // 壓縮處理
         if ($forceCompress) {
             // 強制壓縮
@@ -45,7 +46,7 @@ class EncodeHelper
             // 不強制壓縮
             $json = json_encode($data);
             $zip = base64_encode(gzdeflate($json));
-            
+
             if (strlen($json) <= strlen($zip)) {
                 // 無壓縮必要
                 $opt = '0' . $json;
@@ -54,7 +55,7 @@ class EncodeHelper
                 $opt = '2' . $zip;
             }
         }
-        
+
         return $opt;
     }
 
@@ -79,12 +80,12 @@ class EncodeHelper
     {
         // 輸出內容初始化
         $opt = '';
-        
+
         if ($data !== '') {
             // 拆解內容 - 是否壓縮、真實資料
             $isCompress = substr($data, 0, 1);
             $rData = substr($data, 1);
-            
+
             switch ($isCompress) {
                 case '0':
                     // 無壓縮
@@ -103,7 +104,7 @@ class EncodeHelper
                     $opt = $data;
             }
         }
-        
+
         return $opt;
     }
 }

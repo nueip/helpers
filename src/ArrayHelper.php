@@ -22,12 +22,12 @@ class ArrayHelper
      * @param boolean $obj2array stdClass convert to array
      * @return mixed Result with indexBy Keys
      */
-    public static function indexBy(& $data, $keys, $obj2array = false)
+    public static function indexBy(&$data, $keys, $obj2array = false)
     {
         // Refactor Array $data structure by $keys
         return self::_refactorBy($data, $keys, $obj2array, $type = 'indexBy');
     }
-    
+
     /**
      * Index Only by keys, No Data
      *
@@ -39,12 +39,12 @@ class ArrayHelper
      * @param string|array $keys
      * @param boolean $obj2array Array content convert to array (when object)
      */
-    public static function indexOnly(& $data, $keys, $obj2array = false)
+    public static function indexOnly(&$data, $keys, $obj2array = false)
     {
         // Refactor Array $data structure by $keys
         return self::_refactorBy($data, $keys, $obj2array, $type = 'indexOnly');
     }
-    
+
     /**
      * Get Data content by index
      *
@@ -58,11 +58,11 @@ class ArrayHelper
      * @param array|string $indexTo Content index of the data you want to get
      * @return array
      */
-    public static function getContent(Array $data, $indexTo = [])
+    public static function getContent(array $data, $indexTo = [])
     {
         //* Arguments prepare */
-        $indexTo = (array)$indexTo;
-        
+        $indexTo = (array) $indexTo;
+
         foreach ($indexTo as $idx) {
             if (is_array($data) && array_key_exists($idx, $data)) {
                 // If exists, Get values by recursion
@@ -72,7 +72,7 @@ class ArrayHelper
                 break;
             }
         }
-        
+
         return $data;
     }
 
@@ -96,7 +96,6 @@ class ArrayHelper
             if ($closest === null || abs($search - $closest) > abs($search - $item)) {
                 $closest = $item;
             }
-
         }
 
         return $closest;
@@ -122,7 +121,6 @@ class ArrayHelper
             if ($closest === null || ($search >= $item && $search - $closest > $search - $item)) {
                 $closest = $item;
             }
-
         }
 
         return $closest;
@@ -155,10 +153,10 @@ class ArrayHelper
     public static function gatherData($data, $colNameList, $objLv = 1, $dataList = array())
     {
         // 將物件轉成陣列
-        $data = is_object($data) ? (array)$data : $data;
-        
+        $data = is_object($data) ? (array) $data : $data;
+
         // 遍歷陣列 - 只處理陣列
-        if (is_array($data) && ! empty($data)) {
+        if (is_array($data) && !empty($data)) {
             if ($objLv > 1) {
                 // === 超過1層 ===
                 foreach ($data as $k => $row) {
@@ -189,7 +187,7 @@ class ArrayHelper
                 }
             }
         }
-        
+
         return $dataList;
     }
 
@@ -296,7 +294,7 @@ class ArrayHelper
      *
      * @return array Returns a multidimensional array
      */
-    public static function groupBy(& $data, $keys, $obj2array = false)
+    public static function groupBy(&$data, $keys, $obj2array = false)
     {
         // Refactor Array $data structure by $keys
         return self::_refactorBy($data, $keys, $obj2array, $type = 'groupBy');
@@ -323,7 +321,7 @@ class ArrayHelper
 
         return array_map(function ($row) use ($keys) {
             $result = [];
-            foreach($keys as $key){
+            foreach ($keys as $key) {
                 if (isset($row[$key])) {
                     $result[$key] = $row[$key];
                 }
@@ -338,7 +336,7 @@ class ArrayHelper
      * @example
      * \nueip\helpers\ArrayHelper::diffRecursive($newData, $oldData);
      * 
-    *  @author Gunter Chou
+     *  @author Gunter Chou
      * @param array $Comparative
      * @param array $Comparison
      * @return array $outputDiff Result diff data
@@ -362,17 +360,17 @@ class ArrayHelper
         }
         return $outputDiff;
     }
-    
+
     /**
      * Array Sort Recursive
      *
      * @param array $srcArray
      * @param string $type ksort(default), krsort, sort, rsort
      */
-    public static function sortRecursive(Array & $srcArray, $type = 'ksort')
+    public static function sortRecursive(array &$srcArray, $type = 'ksort')
     {
         // Run ksort(default), krsort, sort, rsort
-        switch($type) {
+        switch ($type) {
             case 'ksort':
             default:
                 ksort($srcArray);
@@ -387,19 +385,19 @@ class ArrayHelper
                 rsort($srcArray);
                 break;
         }
-        
+
         // If child element is array, recursive
-        foreach ($srcArray as $key => & $value) {
+        foreach ($srcArray as $key => &$value) {
             is_array($value) && self::sortRecursive($value, $type);
         }
     }
-    
+
     /**
      * **********************************************
      * ************** Private Function **************
      * **********************************************
      */
-    
+
     /**
      * Refactor Array $data structure by $keys
      * 
@@ -411,66 +409,66 @@ class ArrayHelper
      * @param boolean $obj2array Array content convert to array (when object)
      * @param string $type indexBy(index)/groupBy(group)/only index,no data(indexOnly/noData)
      */
-    protected static function _refactorBy(& $data, $keys, $obj2array = false, $type = 'index')
+    protected static function _refactorBy(&$data, $keys, $obj2array = false, $type = 'index')
     {
         // 參數處理
-        $keys = (array)$keys;
-        
+        $keys = (array) $keys;
+
         $result = [];
-        
+
         // 遍歷待處理陣列
         foreach ($data as $row) {
             // 旗標，是否取得索引
             $getIndex = false;
             // 位置初炲化 - 傳址
-            $rRefer = & $result;
+            $rRefer = &$result;
             // 可用的index清單
             $indexs = [];
-            
+
             // 遍歷$keys陣列 - 建構索引位置
             foreach ($keys as $key) {
                 $vKey = null;
-                
+
                 // 取得索引資料 - 從$key
                 if (is_object($row) && isset($row->{$key})) {
                     $vKey = $row->{$key};
                 } elseif (is_array($row) && isset($row[$key])) {
                     $vKey = $row[$key];
                 }
-                
+
                 // 有無法取得索引資料，跳出
                 if (is_null($vKey)) {
                     $getIndex = false;
                     break;
                 }
-                
+
                 // 記錄可用的index
                 $indexs[] = $vKey;
-                
+
                 // 本次索引完成
                 $getIndex = true;
             }
-            
+
             // 略過無法取得索引或索引不完整的資料
-            if (! $getIndex) {
+            if (!$getIndex) {
                 continue;
             }
-            
+
             // 變更位置 - 傳址
             foreach ($indexs as $idx) {
-                $rRefer = & $rRefer[$idx];
+                $rRefer = &$rRefer[$idx];
             }
-            
+
             // 將資料寫入索引位置
             switch ($type) {
                 case 'index':
                 case 'indexBy':
                 default:
-                    $rRefer = $obj2array ? (array)$row : $row;
+                    $rRefer = $obj2array ? (array) $row : $row;
                     break;
                 case 'group':
                 case 'groupBy':
-                    $rRefer[] = $obj2array ? (array)$row : $row;
+                    $rRefer[] = $obj2array ? (array) $row : $row;
                     break;
                 case 'indexOnly':
                 case 'noData':
@@ -478,7 +476,7 @@ class ArrayHelper
                     break;
             }
         }
-        
+
         return $data = $result;
     }
 }

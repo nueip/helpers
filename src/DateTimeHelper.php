@@ -60,17 +60,17 @@ class DateTimeHelper
      * @param string PHP date() format, empty returns Unix time
      * @return string|integer Date format|Unix time
      */
-    public static function shiftMonths($date, $operation='+', $months=1, $outputFormat="Y-m-d")
+    public static function shiftMonths($date, $operation = '+', $months = 1, $outputFormat = "Y-m-d")
     {
         $timestamp = strtotime($date);
-    
+
         // Year
-        $op = ($operation=='+') ? '+' : '-';
+        $op = ($operation == '+') ? '+' : '-';
         $newBasetime = strtotime(date("Y-m-1 H:i:s", $timestamp) . " {$op}{$months} month");
-        
+
         // Month
         $m = date("m", $newBasetime);
-        
+
         // Day
         $lastDay = date("t", $newBasetime);
         $day = date("d", $timestamp);
@@ -79,7 +79,7 @@ class DateTimeHelper
 
         return ($outputFormat) ? date($outputFormat, $result) : $result;
     }
-    
+
     /**
      * 取得日期迭代器 - 以日為單位迭代日期
      *
@@ -102,13 +102,13 @@ class DateTimeHelper
         $start = new \DateTime($start);
         $end = new \DateTime($end);
         $end = $end->modify('+1 day');
-        
+
         $interval = new \DateInterval('P1D');
         $daterange = new \DatePeriod($start, $interval, $end);
-        
+
         return $daterange;
     }
-    
+
     /**
      * 取得日期的星期
      * 
@@ -123,5 +123,4 @@ class DateTimeHelper
         $wDay = date('w', strtotime($date));
         return $wDay != '0' ? $wDay : '7';
     }
-    
 }

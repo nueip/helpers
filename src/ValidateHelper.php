@@ -1,4 +1,5 @@
 <?php
+
 namespace nueip\helpers;
 
 /**
@@ -47,25 +48,25 @@ class ValidateHelper
      * @param String $msgType
      *            訊息輸出模式 json, Exception, rest
      */
-    public static function validate(Array $rawData, Array $rules, $msgType = 'message', $msgCode = '404')
+    public static function validate(array $rawData, array $rules, $msgType = 'message', $msgCode = '404')
     {
         // 初始化
         self::init();
         $opt = true;
-        
+
         // 執行驗証
         $validated = self::$_gump->validate($rawData, $rules);
-        
+
         // 驗証錯誤結果處理
-        if (! ($validated === TRUE)) {
+        if (!($validated === TRUE)) {
             foreach ($validated as $key => $value) {
                 $validated[$key]["message"] = validateMessage($validated[$key]['rule'], $validated[$key]['param']);
                 $validated[$key]['name'] = validateName($validated[$key]['field']);
             }
-            
+
             $opt = self::sendMessage($validated, $msgCode, $msgType);
         }
-        
+
         return $opt;
     }
 
@@ -74,7 +75,7 @@ class ValidateHelper
      * ************** Private Function **************
      * **********************************************
      */
-    
+
     /**
      * 初始化
      *
@@ -83,10 +84,10 @@ class ValidateHelper
      */
     public static function init($forceInit = false)
     {
-        if (! self::$_inited || $forceInit) {
+        if (!self::$_inited || $forceInit) {
             // 初炲化旗標 - 防止重複初始化
             self::$_inited = true;
-            
+
             // 初始化
             self::$_gump = new \GUMP();
             self::$_response = new \yidas\http\Response();

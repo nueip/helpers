@@ -1,4 +1,5 @@
 <?php
+
 namespace nueip\helpers;
 
 use marsapp\helper\timeperiod\TimePeriodHelper as tpHelper;
@@ -24,13 +25,13 @@ use marsapp\helper\timeperiod\TimePeriodHelper as tpHelper;
  */
 class TimePeriodHelper
 {
-    
+
     /**
      * *********************************************
      * ************** Public Function **************
      * *********************************************
      */
-    
+
     /**
      * 時間段排序 (正序)
      *
@@ -42,11 +43,11 @@ class TimePeriodHelper
      * @param array $timePeriods
      * @return array
      */
-    public static function sort(Array $timePeriods)
+    public static function sort(array $timePeriods)
     {
         return tpHelper::sort($timePeriods);
     }
-    
+
     /**
      * 時間段聯集
      *
@@ -62,7 +63,7 @@ class TimePeriodHelper
     {
         return call_user_func_array(['\marsapp\helper\timeperiod\TimePeriodHelper', 'union'], func_get_args());
     }
-    
+
     /**
      * 時間段差集
      *
@@ -77,11 +78,11 @@ class TimePeriodHelper
      * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function diff(Array $timePeriods1, Array $timePeriods2, $sortOut = 'default')
+    public static function diff(array $timePeriods1, array $timePeriods2, $sortOut = 'default')
     {
         return tpHelper::diff($timePeriods1, $timePeriods2, $sortOut);
     }
-    
+
     /**
      * 時間段交集
      * 
@@ -95,11 +96,11 @@ class TimePeriodHelper
      * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function intersect(Array $timePeriods1, Array $timePeriods2, $sortOut = 'default')
+    public static function intersect(array $timePeriods1, array $timePeriods2, $sortOut = 'default')
     {
         return tpHelper::intersect($timePeriods1, $timePeriods2, $sortOut);
     }
-    
+
     /**
      * 時間段是否有交集
      *
@@ -113,11 +114,11 @@ class TimePeriodHelper
      * @param array $timePeriods2
      * @return bool
      */
-    public static function isOverlap(Array $timePeriods1, Array $timePeriods2)
+    public static function isOverlap(array $timePeriods1, array $timePeriods2)
     {
         return tpHelper::isOverlap($timePeriods1, $timePeriods2);
     }
-    
+
     /**
      * 填滿時間段
      *
@@ -128,11 +129,11 @@ class TimePeriodHelper
      * @param array $timePeriods
      * @return array
      */
-    public static function fill(Array $timePeriods)
+    public static function fill(array $timePeriods)
     {
         return tpHelper::fill($timePeriods);
     }
-    
+
     /**
      * 時間段間隙
      * 
@@ -144,11 +145,11 @@ class TimePeriodHelper
      * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function gap(Array $timePeriods, $sortOut = 'default')
+    public static function gap(array $timePeriods, $sortOut = 'default')
     {
         return tpHelper::gap($timePeriods, $sortOut);
     }
-    
+
     /**
      * 計算時間段的總時間
      *
@@ -164,11 +165,11 @@ class TimePeriodHelper
      * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return number
      */
-    public static function time(Array $timePeriods, $precision = 0, $sortOut = 'default')
+    public static function time(array $timePeriods, $precision = 0, $sortOut = 'default')
     {
         return tpHelper::time($timePeriods, $precision, $sortOut);
     }
-    
+
     /**
      * 裁剪時間段-依指定時間長度
      *
@@ -185,11 +186,11 @@ class TimePeriodHelper
      * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function cut(Array $timePeriods, $time, $extension = false, $sortOut = 'default')
+    public static function cut(array $timePeriods, $time, $extension = false, $sortOut = 'default')
     {
         return tpHelper::cut($timePeriods, $time, $extension, $sortOut);
     }
-    
+
     /**
      * 延伸時間段
      *
@@ -206,11 +207,11 @@ class TimePeriodHelper
      * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function extend(Array $timePeriods, $time, $interval = 0, $sortOut = 'default')
+    public static function extend(array $timePeriods, $time, $interval = 0, $sortOut = 'default')
     {
         return tpHelper::extend($timePeriods, $time, $interval, $sortOut);
     }
-    
+
     /**
      * 縮短時間段
      *
@@ -227,11 +228,11 @@ class TimePeriodHelper
      * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function shorten(Array $timePeriods, $time, $crossperiod = true, $sortOut = 'default')
+    public static function shorten(array $timePeriods, $time, $crossperiod = true, $sortOut = 'default')
     {
         return tpHelper::shorten($timePeriods, $time, $crossperiod, $sortOut);
     }
-    
+
     /**
      * 格式轉換
      * 
@@ -244,11 +245,11 @@ class TimePeriodHelper
      * @param string $unit 時間單位 (hour, minute, second)
      * @return array
      */
-    public static function format(Array $timePeriods, $unit = 'default')
+    public static function format(array $timePeriods, $unit = 'default')
     {
         return tpHelper::format($timePeriods, $unit);
     }
-    
+
     /**
      * 驗証時間段格式
      *
@@ -264,7 +265,7 @@ class TimePeriodHelper
     {
         return tpHelper::validate($timePeriods);
     }
-    
+
     /**
      * 過濾時間段格式
      *
@@ -282,15 +283,15 @@ class TimePeriodHelper
     {
         return tpHelper::filter($timePeriods, $exception);
     }
-    
-    
+
+
     /**
      * **********************************************
      * ************** Options Function **************
      * **********************************************
      */
-    
-    
+
+
     /**
      * 設定時間處理單位
      * 
@@ -308,7 +309,7 @@ class TimePeriodHelper
     {
         return tpHelper::setUnit($unit, $target);
     }
-    
+
     /**
      * 取得時間處理單位
      *
@@ -322,7 +323,7 @@ class TimePeriodHelper
     {
         return tpHelper::getUnit($target);
     }
-    
+
     /**
      * 設定過濾參數-是否濾時間格式
      * 
@@ -340,7 +341,7 @@ class TimePeriodHelper
     {
         return tpHelper::setFilterDatetime($bool);
     }
-    
+
     /**
      * 取得過濾參數-是否濾時間格式
      *
@@ -352,7 +353,7 @@ class TimePeriodHelper
     {
         return tpHelper::getFilterDatetime();
     }
-    
+
     /**
      * 設定自動整理時間段參數
      *
@@ -368,7 +369,7 @@ class TimePeriodHelper
     {
         return tpHelper::setSortOut($bool);
     }
-    
+
     /**
      * 取得自動整理參數
      *
@@ -380,11 +381,10 @@ class TimePeriodHelper
     {
         return tpHelper::getSortOut();
     }
-    
+
     /**
      * **********************************************
      * ************** Private Function **************
      * **********************************************
      */
-    
 }

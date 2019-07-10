@@ -26,28 +26,28 @@ class SqlHelper
     public static function whereInChunk($columnName, $snList, $queryBuilder = null, $size = 300)
     {
         // 參數處理
-        $snList = (array)$snList;
+        $snList = (array) $snList;
         $queryBuilder = is_null($queryBuilder) ? get_instance()->db : $queryBuilder;
-        
+
         // 處理非空陣列
         if (!empty($snList)) {
             $snChunk = array_chunk($snList, $size);
-            
+
             $queryBuilder->group_start();
-            
+
             foreach ($snChunk as $sn) {
                 $queryBuilder->or_where_in($columnName, $sn);
             }
-            
+
             $queryBuilder->group_end();
         } else {
             // 空陣列時，將查詢結果設為空
             $queryBuilder->where(1, 0);
         }
-        
+
         return $queryBuilder;
     }
-    
+
     /**
      * 協助處理時間段交集SQL指令
      * 
@@ -61,15 +61,15 @@ class SqlHelper
     {
         // 參數處理
         $queryBuilder = is_null($queryBuilder) ? get_instance()->db : $queryBuilder;
-        
+
         $queryBuilder->not_group_start()
-                ->where($sCol . ' >', $eDate)
-                ->or_group_start()
-                    ->where($eCol . ' <', $sDate)
-                    ->where($eCol . ' !=', '0000-00-00')
-                ->group_end()
+            ->where($sCol . ' >', $eDate)
+            ->or_group_start()
+            ->where($eCol . ' <', $sDate)
+            ->where($eCol . ' !=', '0000-00-00')
+            ->group_end()
             ->group_end();
-        
+
         return $queryBuilder;
     }
 }

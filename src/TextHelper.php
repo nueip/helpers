@@ -1,4 +1,5 @@
 <?php
+
 namespace nueip\helpers;
 
 /**
@@ -67,7 +68,7 @@ class TextHelper
 
         return $strtmp;
     }
-    
+
     /**
      * 轉換 - br轉nl
      * 
@@ -76,9 +77,9 @@ class TextHelper
      */
     public static function br2nl($str)
     {
-        return preg_replace('/<[bB][rR]\\s*\/?>/i',"\n", $str);
+        return preg_replace('/<[bB][rR]\\s*\/?>/i', "\n", $str);
     }
-    
+
     /**
      * 寬度處理 - 單行
      * 
@@ -95,7 +96,7 @@ class TextHelper
     {
         return mb_strimwidth($str, 0, $widthLimit, $trimmarker);
     }
-    
+
     /**
      * 寬度處理 - 字串依寬度補斷行 - textarea
      *
@@ -111,16 +112,16 @@ class TextHelper
      */
     public static function strLineWidthRepair($str, $widthLimit = 50, $lineLimit = 0, $trimmarker = '...')
     {
-        $encoding = mb_detect_encoding( $str, 'auto', true );
-        
+        $encoding = mb_detect_encoding($str, 'auto', true);
+
         // 以斷行為分隔點，轉陣列
         $strList = mb_split("[\r]?\n", $str);
-        
+
         $newStr = [];
         foreach ($strList as $k => $s) {
             // 計算寬度
             $sl = mb_strwidth($s, $encoding);
-            
+
             // 寬度限制處理
             if ($widthLimit < $sl) {
                 // 超過寬度限制處理 - 合併剩下的文字，並重新斷行
@@ -131,21 +132,21 @@ class TextHelper
                 // 未超過寬度限度處理
                 $newStr[] = $s;
             }
-            
+
             unset($strList[$k]);
         }
-        
+
         // 行數限制處理
         if ($lineLimit && $lineLimit < sizeof($newStr)) {
             $newStr = array_slice($newStr, 0, $lineLimit);
-            $newStr[$lineLimit-1] = self::strWidthLimit($newStr[$lineLimit-1], $widthLimit - strlen($trimmarker), $trimmarker);
+            $newStr[$lineLimit - 1] = self::strWidthLimit($newStr[$lineLimit - 1], $widthLimit - strlen($trimmarker), $trimmarker);
         }
-        
+
         $opt = implode("\n", $newStr);
-        
+
         return $opt;
     }
-    
+
     /**
      * 寬度處理 - 字串依寬度重新斷行 - textarea
      *
@@ -164,10 +165,10 @@ class TextHelper
     public static function strLineWidthRefactor($str, $widthLimit = 50, $lineLimit = 0, $trimmarker = '...')
     {
         // 偵測編碼
-        $encoding = mb_detect_encoding( $str, 'auto', true );
-        
+        $encoding = mb_detect_encoding($str, 'auto', true);
+
         // 重整字串 - 移除斷行 - ASCII,UTF-8中使用str_replace是安全的
-        $srMap = ['ASCII'=>'','UTF-8'=>'','ascii'=>'','utf-8'=>'','UTF8'=>'','utf8'=>''];
+        $srMap = ['ASCII' => '', 'UTF-8' => '', 'ascii' => '', 'utf-8' => '', 'UTF8' => '', 'utf8' => ''];
         if (isset($srMap[$encoding])) {
             $ns = str_replace(["\r\n", "\n", "\r"], '', $str);
         } else {
@@ -175,29 +176,29 @@ class TextHelper
             $strList = array_map('trim', $strList);
             $ns = implode('', $strList);
         }
-        
+
         // 寬度處理 - 字串依寬度重新斷行成陣列
         $newStr = self::_strWidthRefactor2Array($ns, $widthLimit, $encoding);
-        
+
         // 行數限制處理
         if ($lineLimit && $lineLimit < sizeof($newStr)) {
             $newStr = array_slice($newStr, 0, $lineLimit);
-            $newStr[$lineLimit-1] = self::strWidthLimit($newStr[$lineLimit-1], $widthLimit - strlen($trimmarker), $trimmarker);
+            $newStr[$lineLimit - 1] = self::strWidthLimit($newStr[$lineLimit - 1], $widthLimit - strlen($trimmarker), $trimmarker);
         }
-        
+
         $opt = implode("\n", $newStr);
-        
+
         return $opt;
     }
-    
-    
-    
+
+
+
     /**
      * **********************************************
      * ************** Private Function **************
      * **********************************************
      */
-    
+
     /**
      * 寬度處理 - 字串依寬度重新斷行成陣列
      * 
@@ -209,26 +210,25 @@ class TextHelper
     protected static function _strWidthRefactor2Array($str, $widthLimit, $encoding = '')
     {
         // 偵測編碼
-        $encoding = $encoding ? $encoding : mb_detect_encoding( $str, 'auto', true );
-        
+        $encoding = $encoding ? $encoding : mb_detect_encoding($str, 'auto', true);
+
         // 計算總寬
         $tw = mb_strwidth($str, $encoding);
-        
+
         $newStr = [];
-        for ($i=0; $i < $tw; $i+=$widthLimit) {
+        for ($i = 0; $i < $tw; $i += $widthLimit) {
             $s1 = mb_strimwidth($str, 0, $widthLimit, '', $encoding);
             $newStr[] = $s1;
-            
+
             // 重設待處理字串
             $str = mb_substr($str, mb_strlen($s1));
         }
-        
+
         // 處理剩餘字元
         if (!empty($str)) {
             $newStr[] = $str;
         }
-        
+
         return $newStr;
     }
-    
 }

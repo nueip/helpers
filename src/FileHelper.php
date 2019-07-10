@@ -31,7 +31,7 @@ class FileHelper
         if (($totalSize / 1024) > $maxKB) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -46,7 +46,7 @@ class FileHelper
         // 保留字元
         static $reservedChar = [
             '<', '>', '|', ':', '&',
-            '*', '(', ')', ';' ,'"',
+            '*', '(', ')', ';', '"',
             '/', '?', '\\', '\'',
         ];
 
