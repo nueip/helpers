@@ -120,6 +120,51 @@ class TimePeriodHelper
     }
 
     /**
+     * The time period is in contact with the specified time (time period)
+     * 
+     * @author Mars Hung
+     * @param array $timePeriods
+     * @param string $sDateTime
+     * @param string $eDateTime
+     * @param bool|string $sortOut
+     * @return array
+     */
+    public static function contact(array $timePeriods, $sDateTime, $eDateTime = null, $sortOut = 'default')
+    {
+        return tpHelper::contact($timePeriods, $sDateTime, $eDateTime, $sortOut);
+    }
+
+    /**
+     * Time period greater than the specified time
+     * 
+     * @author Mars Hung
+     * @param array $timePeriods
+     * @param string $refDatetime Specified time to compare against
+     * @param bool $fullTimePeriod Get only the full time period
+     * @param bool|string $sortOut
+     * @return array
+     */
+    public static function greaterThan(array $timePeriods, $refDatetime, $fullTimePeriod = true, $sortOut = 'default')
+    {
+        return tpHelper::greaterThan($timePeriods, $refDatetime, $fullTimePeriod, $sortOut);
+    }
+
+    /**
+     * Time period less than the specified time
+     * 
+     * @author Mars Hung
+     * @param array $timePeriods
+     * @param string $refDatetime Specified time to compare against
+     * @param bool $fullTimePeriod Get only the full time period
+     * @param bool|string $sortOut
+     * @return array
+     */
+    public static function lessThan(array $timePeriods, $refDatetime, $fullTimePeriod = true, $sortOut = 'default')
+    {
+        return tpHelper::lessThan($timePeriods, $refDatetime, $fullTimePeriod, $sortOut);
+    }
+
+    /**
      * 填滿時間段
      *
      * Leaving only the first start time and the last end time
@@ -181,14 +226,12 @@ class TimePeriodHelper
      * @param array $timePeriods
      * @param number $time
      *            時間長度
-     * @param string $extension
-     *            如是 時間長度 超過 時間段的總時間，是否延伸時間段(預設false)
      * @param bool $sortOut 是否重新整理傳入的時間段 (是(true)、否(false)、使用setSortOut全域方式處理(default))
      * @return array
      */
-    public static function cut(array $timePeriods, $time, $extension = false, $sortOut = 'default')
+    public static function cut(array $timePeriods, $time, $sortOut = 'default')
     {
-        return tpHelper::cut($timePeriods, $time, $extension, $sortOut);
+        return tpHelper::cut($timePeriods, $time, $sortOut);
     }
 
     /**
@@ -242,7 +285,7 @@ class TimePeriodHelper
      * @author Mars Hung
      * 
      * @param array $timePeriods
-     * @param string $unit 時間單位 (hour, minute, second)
+     * @param string $unit 時間單位 (hour, minute, second)，如為default，使用self::$_options的設定(由setUnit()變更)
      * @return array
      */
     public static function format(array $timePeriods, $unit = 'default')
@@ -275,13 +318,12 @@ class TimePeriodHelper
      * @author Mars Hung
      * 
      * @param array $timePeriods
-     * @param bool $exception 有錯誤時，是否丟出例外(預設false)
      * @throws \Exception
      * @return array
      */
-    public static function filter($timePeriods, $exception = false)
+    public static function filter($timePeriods)
     {
-        return tpHelper::filter($timePeriods, $exception);
+        return tpHelper::filter($timePeriods);
     }
 
 
@@ -300,7 +342,7 @@ class TimePeriodHelper
      *
      * @author Mars Hung
      * 
-     * @param string $unit
+     * @param string $unit 時間單位 (hour, minute, second)，如為default，使用self::$_options的設定(由setUnit()變更)
      * @param string $target Specify function,or all functions
      * @throws \Exception
      * @return $this
@@ -316,12 +358,13 @@ class TimePeriodHelper
      * @author Mars Hung
      * 
      * @param string $target Specify function's unit (time, format)
+     * @param string $unit 時間單位 (hour, minute, second)，如為default，使用self::$_options的設定(由setUnit()變更)
      * @throws \Exception
      * @return string
      */
-    public static function getUnit(string $target)
+    public static function getUnit(string $target, $unit = 'default')
     {
-        return tpHelper::getUnit($target);
+        return tpHelper::getUnit($target, $unit);
     }
 
     /**
@@ -382,9 +425,50 @@ class TimePeriodHelper
         return tpHelper::getSortOut();
     }
 
+    
     /**
-     * **********************************************
-     * ************** Private Function **************
-     * **********************************************
+     * ********************************************
+     * ************** Tools Function **************
+     * ********************************************
      */
+
+    /**
+     * Check datetime fast
+     * 
+     * Only check format,no check for reasonableness
+     * 
+     * @param string $datetime
+     * @return boolean
+     */
+    public static function isDatetime(string $datetime)
+    {
+        return tpHelper::isDatetime($datetime);
+    }
+
+    /**
+     * Time format convert
+     * 
+     * format:Y-m-d H:i:s
+     * When the length is insufficient, it will add the missing
+     * 
+     * @param string $datetime
+     * @param string $unit Time unit, if default,use self::$_options setting(set by setUnit())
+     * @return string
+     */
+    public static function timeFormatConv(string $datetime, $unit = 'default')
+    {
+        return tpHelper::timeFormatConv($datetime, $unit);
+    }
+
+    /**
+     * Time Conversion frm unit to second
+     * 
+     * @param number $time
+     * @param string $unit Time unit, if default,use self::$_options setting(set by setUnit())
+     * @return int
+     */
+    public static function time2Second($time, $unit = 'default')
+    {
+        return tpHelper::time2Second($time, $unit);
+    }
 }
