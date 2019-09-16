@@ -33,4 +33,16 @@ class UrlHelper
 
         return $trimMergedUri ? trim($uri, '/') : $uri;
     }
+
+    /**
+     * 解析由通知訊息所帶入的額外參數
+     *
+     * @return mixed
+     */
+    public static function parseNoticeParams()
+    {
+        return isset($_GET['params'])
+            ? json_decode(revert_hash($_GET['params']), true)
+            : null;
+    }
 }
