@@ -35,14 +35,26 @@ class UrlHelper
     }
 
     /**
-     * 解析由通知訊息所帶入的額外參數
+     * decode the params passed by GET method
      *
+     * @param string $paramKey
      * @return mixed
      */
-    public static function parseNoticeParams()
+    public static function decodeUrlParams($paramKey = 'params')
     {
-        return isset($_GET['params'])
-            ? json_decode(revert_hash($_GET['params']), true)
+        return isset($_GET[$paramKey])
+            ? json_decode(revert_hash($_GET[$paramKey]), true)
             : null;
+    }
+
+    /**
+     * encode the params which would pass with GET method
+     *
+     * @param array $data
+     * @return string
+     */
+    public static function encodeUrlParams($data)
+    {
+        return urlencode(my_hash(json_encode($data)));
     }
 }
