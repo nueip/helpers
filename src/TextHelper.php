@@ -231,4 +231,28 @@ class TextHelper
 
         return $newStr;
     }
+
+    /**
+     * 將輸入數字轉換成 全形 或 半形 數字
+     *
+     * @param string $strs
+     * @param string $types ( full | half )
+     *
+     * @return string $strtmp
+     */
+    public static function full2half($strs, $types = 'half')
+    {
+        $nt = array(
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        );
+        $wt = array(
+            '０', '１', '２', '３', '４', '５', '６', '７', '８', '９',
+        );
+
+        $strtmp = ($types === 'half')
+            ? str_replace($wt, $nt, $strs)
+            : str_replace($nt, $wt, $strs);
+
+        return $strtmp;
+    }
 }
