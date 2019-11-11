@@ -64,4 +64,31 @@ class FileHelper
 
         return $filename;
     }
+
+    /**
+     * File content encode conversion
+     *
+     * @param  string          $filePath
+     * @param  string|string[] $fileEncode
+     * @param  string          $convEncode
+     * @return void
+     */
+    public static function encodeConv($filePath, $fileEncode = 'BIG5', $convEncode = 'UTF-8')
+    {
+        $content = file_get_contents($filePath);
+
+        // Set detect encode list
+        $encodeList = is_array($fileEncode) ? $fileEncode : explode(',', $fileEncode);
+        array_push($encodeList, $convEncode);
+
+        // Get content encode type
+        $oriEncode = mb_detect_encoding($content, $encodeList, true);
+
+        // Convert when encoding is different
+        if ($oriEncode !== $convEncode) {
+            $content = mb_convert_encoding($content, $convEncode, $oriEncode);
+        }
+
+        file_put_contents($filePath, $content);
+    }
 }
