@@ -2,12 +2,23 @@
 
 namespace nueip\helpers;
 
+/**
+ * Security Helper
+ *
+ * @author Nick Lai
+ * @author Gunter Chou
+ */
 class SecurityHelper
 {
     /**
      * Convert special characters to HTML entities
      *
-     * @param mixed $data The data being deep converted.
+     * @example
+     *  $result = SecurityHelper::deepHtmlspecialchars(
+     *      ['name' => 'Hello<script>alert("World");</script>']
+     *  );
+     *
+     * @param  mixed $data The data being deep converted.
      * @return mixed The converted data.
      */
     public static function deepHtmlspecialchars($data)
