@@ -15,7 +15,7 @@ class SecurityHelperTest extends TestCase
      */
     public function testDeepHtmlspecialchars()
     {
-        $templete = [
+        $template = [
             'test1' => [45678, -87654, 0.6524],
             'test2' => 'test2 <script> alert("Error"); </script>',
             'test3' => [
@@ -55,7 +55,7 @@ class SecurityHelperTest extends TestCase
             ],
         ];
 
-        $output = SecurityHelper::deepHtmlspecialchars($templete);
+        $output = SecurityHelper::deepHtmlspecialchars($template);
 
         $this->assertEquals($expected, $output);
     }
