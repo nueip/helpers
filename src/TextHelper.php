@@ -111,6 +111,21 @@ class TextHelper
     }
 
     /**
+     * 濾除無法列印的字元
+     * 
+     * Usage:
+     * - $string = TextHelper::trimNonPrintChar($string);
+     * - $array = array_map([TextHelper::class, 'trimNonPrintChar'], $array);
+     * 
+     * @param string $str 目標字串
+     * @return string
+     */
+    public static function trimNonPrintChar($str)
+    {
+        return preg_replace('/[[:^print:]]/', '', $str);
+    }
+
+    /**
      * 寬度處理 - 單行
      * 
      * - 未處理換行符
