@@ -2,6 +2,8 @@
 
 namespace nueip\helpers;
 
+use \Exception;
+
 /**
  * File Helper
  * 
@@ -91,4 +93,87 @@ class FileHelper
 
         file_put_contents($filePath, $content);
     }
+
+    /**
+     * 文本檔案輸出 - Text
+     * 
+     * @author Gunter.Chou
+     * @param string $filename 輸出檔案名
+     * @param array $data 檔案內容
+     * @param string $fileEncode 檔案編碼，預設UTF-8
+     * @param string $separator 分隔符號
+     */
+    public static function exportPlain($filename, $data, $fileEncode = 'UTF-8', $separator = ',')
+    {
+        header('Content-Encoding: utf-8');
+        header('Content-Type: charset=utf-8; text/plain; application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . $filename . '; filename*=UTF-8\'\'' . $filename);
+        
+        $content = '';
+        foreach ($data as $row) {
+            $content = $content . implode($separator, $row) . "\r\n";
+        }
+
+        self::_printContent($content, $fileEncode);
+        exit;
+    }
+
+    /**
+     * CSV 檔案輸出
+     * 
+     * @author Gunter.Chou
+     * @param string $filename 輸出檔案名
+     * @param array $data 檔案內容
+     * @param string $fileEncode 檔案編碼，預設UTF-8
+     * @param string $separator 分隔符號
+     */
+    public static function exportCsv($filename, $data, $fileEncode = 'UTF-8', $separator = ',')
+    {
+        header('Content-Encoding: utf-8');
+        header('Content-Type: charset=utf-8; text/csv; application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . $filename . '; filename*=UTF-8\'\'' . $filename);
+
+        $content = '';
+        foreach ($data as $row) {
+            foreach ($row as &$val) {
+                $val = '"' . str_replace('"', '""', $val) . '"';
+            }
+            $content = $content . implode($separator, $row) . "\r\n";
+        }
+
+        self::_printContent($content, $fileEncode);
+        exit;
+    }
+
+    /**
+     * **********************************************
+     * ************** Private Function **************
+     * **********************************************
+     */
+
+    /**
+     * 文本編碼輸出
+     * 
+     * @author Gunter.Chou
+     * @param string $content 檔案內容
+     * @param string $fileEncode 檔案編碼，預設UTF-8
+     * @return void
+     */
+    protected static function _printContent($content, $fileEncode = 'UTF-8')
+    {
+        switch ($fileEncode) {
+            case 'UTF-8 BOM':
+                echo "\xEF\xBB\xBF";
+            default:
+            case 'UTF-8':
+                $encode = 'UTF-8';
+                break;
+            case 'BIG-5':
+                $encode = 'BIG-5';
+                break;
+        }
+
+        echo mb_convert_encoding($content, $encode, 'UTF-8');
+    }
+
 }
