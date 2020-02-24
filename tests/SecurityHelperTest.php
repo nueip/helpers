@@ -59,4 +59,53 @@ class SecurityHelperTest extends TestCase
 
         $this->assertEquals($expected, $output);
     }
+
+    /**
+     * @dataProvider isHttpsProvider
+     */
+    public function testIsHttps($data, $expected)
+    {
+        $ori_SERVER = $_SERVER;
+
+        $_SERVER = $data;
+
+        $this->assertEquals($expected, SecurityHelper::isHttps());
+
+        $_SERVER = $ori_SERVER;
+    }
+
+    public function isHttpsProvider()
+    {
+        return [
+            [
+                [
+                    'HTTP_X_FORWARDED_PROTO' => 'HTTPS'
+                ], true
+            ],
+            [
+                [
+                    'HTTP_FRONT_END_HTTPS' => 'ON'
+                ], true
+            ],
+            [
+                [
+                    'HTTPS' => 'ON'
+                ], true
+            ],
+            [
+                [
+                    'HTTP_X_FORWARDED_PROTO' => 'HTTPS',
+                    'HTTP_FRONT_END_HTTPS' => 'OFF',
+                    'HTTPS' => 'OFF',
+                ], true
+            ],
+            [
+                [
+                    'HTTP_X_FORWARDED_PROTO' => 'HTTP',
+                    'HTTP_FRONT_END_HTTPS' => 'ON',
+                    'HTTPS' => 'ON',
+                ], false
+            ],
+        ];
+    }
 }
