@@ -33,4 +33,22 @@ class SecurityHelper
 
         return $data;
     }
+
+    /**
+     * Identifying the "originating protocol" is HTTPS request
+     *
+     * @return boolean
+     */
+    public static function isHttps()
+    {
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+            return strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https';
+        } elseif (isset($_SERVER['HTTP_FRONT_END_HTTPS'])) {
+            return strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) === 'on';
+        } elseif (isset($_SERVER['HTTPS'])) {
+            return strtolower($_SERVER['HTTPS']) !== 'off';
+        }
+
+        return false;
+    }
 }
