@@ -322,9 +322,7 @@ class ArrayHelper
         return array_map(function ($row) use ($keys) {
             $result = [];
             foreach ($keys as $key) {
-                if (isset($row[$key])) {
-                    $result[$key] = $row[$key];
-                }
+                $result[$key] = $row[$key] ?? null;
             }
             return $result;
         }, $data);
