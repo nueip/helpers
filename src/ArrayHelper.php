@@ -77,53 +77,80 @@ class ArrayHelper
     }
 
     /**
-     * Get Closest Numeric Value
+     * Get Closest item by key
      * 
      * @author Gunter Chou
      * 
-     * @param array $array
-     * @param mixed $search
+     * @param array $data
+     * @param string|integer $needle
+     * @param string $compareWith closest|more|less
+     * @param callback $formatKey
      * @return mixed
      */
-    public static function getClosest($array, $search)
+    public static function getClosest(array $data, $needle, $compareWith = 'closest', $formatKey = 'strtotime')
     {
-        $closest = null;
+        // If needle not is numeric, use formatKey callback to format.
+        $needle = is_numeric($needle) ? $needle : call_user_func_array($formatKey, [$needle]);
 
-        foreach ($array as $item) {
+        $compareWith = strtolower($compareWith);
 
-            if (!is_numeric($item)) continue;
+        $closestKey = null;
+        $closestItem = null;
 
-            if ($closest === null || abs($search - $closest) > abs($search - $item)) {
-                $closest = $item;
+        foreach ($data as $key => $item) {
+
+            // If key not is numeric, use formatKey callback to format.
+            $currentKey = is_numeric($key) ? $key : call_user_func_array($formatKey, [$key]);
+
+            switch ($compareWith) {
+                default:
+                case 'closest':
+                    $compare = true;
+                    break;
+                case 'more':
+                    $compare = $needle <= $currentKey;
+                    break;
+                case 'less':
+                    $compare = $needle >= $currentKey;
+                    break;
             }
+
+            if ($compare && ($closestKey === null || abs($needle - $currentKey) < abs($needle - $closestKey))) {
+                $closestKey = $currentKey;
+                $closestItem = $item;
+            }
+
         }
 
-        return $closest;
+        return $closestItem;
     }
 
     /**
-     * Get Less than closest Numeric Value
+     * Get Less than closest item by key
      * 
      * @author Gunter Chou
      * 
-     * @param array $array
-     * @param mixed $search
+     * @param array $data
+     * @param mixed $needle
      * @return mixed
      */
-    public static function getClosestLess($array, $search)
+    public static function getClosestLess(array $data, $needle)
     {
-        $closest = null;
+        return self::getClosest($data, $needle, 'less');
+    }
 
-        foreach ($array as $item) {
-
-            if (!is_numeric($item)) continue;
-
-            if ($closest === null || ($search >= $item && $search - $closest > $search - $item)) {
-                $closest = $item;
-            }
-        }
-
-        return $closest;
+    /**
+     * Get More than closest item by key
+     * 
+     * @author Gunter Chou
+     * 
+     * @param array $data
+     * @param mixed $needle
+     * @return mixed
+     */
+    public static function getClosestMore(array $data, $needle)
+    {
+        return self::getClosest($data, $needle, 'more');
     }
 
     /**
