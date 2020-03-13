@@ -1,7 +1,5 @@
 <?php
 
-namespace nueip\helpers\tests;
-
 use nueip\helpers\SecurityHelper;
 use PHPUnit\Framework\TestCase;
 
