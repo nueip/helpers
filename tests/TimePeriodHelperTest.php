@@ -1,7 +1,5 @@
 <?php
 
-namespace nueip\helpers\tests;
-
 use PHPUnit\Framework\TestCase;
 use nueip\helpers\TimePeriodHelper;
 use marsapp\helper\timeperiod\TimePeriodHelper as tpHelper;

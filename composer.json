@@ -13,9 +13,6 @@
     "autoload": {
         "psr-4": { "nueip\\helpers\\": "src"}
     },
-    "autoload-dev": {
-        "psr-4": { "nueip\\helpers\\tests\\": "tests"}
-    },
     "minimum-stability": "stable",
     "require-dev": {
         "phpunit/phpunit": "^6.5"
