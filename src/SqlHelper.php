@@ -49,6 +49,42 @@ class SqlHelper
     }
 
     /**
+     * 協助處理array chunk SQL指令
+     * 
+     * 當 $snList 為空時，會將略過查詢，
+     * 如需要例外處理，請自行在函式外檢查判斷。
+     * 
+     * Usage:
+     * \nueip\helpers\SqlHelper::notWhereInChunk($columnName, $snList, $queryBuilder = null, $size = 300);
+     * 
+     * @param string $columnName 欄位名稱
+     * @param array $snList 資料陣列
+     * @param DB_query_builder $queryBuilder 為null時，預設為 $this->db
+     * @param integer $size 每次處理大小
+     */
+    public static function notWhereInChunk($columnName, $snList, $queryBuilder = null, $size = 300)
+    {
+        // 參數處理
+        $snList = (array) $snList;
+        $queryBuilder = is_null($queryBuilder) ? get_instance()->db : $queryBuilder;
+
+        // 處理非空陣列
+        if (count($snList)) {
+            $snChunk = array_chunk($snList, $size);
+
+            $queryBuilder->not_group_start();
+
+            foreach ($snChunk as $sn) {
+                $queryBuilder->or_where_in($columnName, $sn);
+            }
+
+            $queryBuilder->group_end();
+        }
+
+        return $queryBuilder;
+    }
+
+    /**
      * 協助處理時間段交集SQL指令
      * 
      * @param string $sCol 起日欄位名
