@@ -108,4 +108,25 @@ class SqlHelper
 
         return $queryBuilder;
     }
+
+    /**
+     * 協助處理時間小於等於特定欄位 且不為 0000-00-00
+     * 
+     * @param string $col 欄位名
+     * @param string $date 日期
+     * @param DB_query_builder $queryBuilder 為null時，預設為 $this->db
+     */
+    public static function timeBefore($columnName, $date, $queryBuilder = null)
+    {
+        // 參數處理
+        $queryBuilder = is_null($queryBuilder) ? get_instance()->db : $queryBuilder;
+
+        $queryBuilder
+            ->group_start()
+            ->where("{$columnName} >=", $date)
+            ->or_where("{$columnName} =", '0000-00-00')
+            ->group_end();
+
+        return $queryBuilder;
+    }
 }
