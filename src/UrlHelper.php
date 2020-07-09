@@ -2,6 +2,8 @@
 
 namespace nueip\helpers;
 
+use nueip\helpers\EncryptHelper;
+
 /**
  * Url Helper
  *
@@ -42,9 +44,21 @@ class UrlHelper
      */
     public static function decodeUrlParams($paramKey = 'params')
     {
-        return isset($_GET[$paramKey])
-            ? json_decode(revert_hash($_GET[$paramKey]), true)
-            : null;
+        $params = $_GET[$paramKey] ?? null;
+
+        if (!isset($params)) {
+            return null;
+        }
+
+        // 優先使用新的解密方式
+        $decodeData = json_decode(EncryptHelper::decryptCustom($params, 'UrlParams'), true);
+
+        // 若新的解密無法正常解析，使用舊的解密方式(目前使用到舊解密的地方只有以前送過的通知信，本段函式可在2021年後移除)
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $decodeData = json_decode(revert_hash($params), true);
+        }
+
+        return $decodeData;
     }
 
     /**
@@ -55,6 +69,6 @@ class UrlHelper
      */
     public static function encodeUrlParams($data)
     {
-        return urlencode(my_hash(json_encode($data)));
+        return urlencode(EncryptHelper::encryptCustom(json_encode($data), 'UrlParams'));
     }
 }
