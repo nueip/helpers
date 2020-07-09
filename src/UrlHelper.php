@@ -2,8 +2,12 @@
 
 namespace nueip\helpers;
 
+use app\services\security\NueipEncrypt;
+
 /**
  * Url Helper
+ * 
+ * - 如需自定hashKey，請定義常數 URL_HELPER_HASH_KEY 值
  *
  * @author Nick Lai
  */
@@ -42,9 +46,23 @@ class UrlHelper
      */
     public static function decodeUrlParams($paramKey = 'params')
     {
-        return isset($_GET[$paramKey])
-            ? json_decode(revert_hash($_GET[$paramKey]), true)
-            : null;
+        NueipEncrypt::setCustomKey(self::getHashKey());
+
+        $params = $_GET[$paramKey] ?? null;
+
+        if (!isset($params)) {
+            return null;
+        }
+
+        // 優先使用新的解密方式(若不加上urlencode，會執行2次urldecode)
+        $decodeData = json_decode(NueipEncrypt::decryptCustom(urlencode($params)), true);
+
+        // 若新的解密無法正常解析，使用舊的解密方式(目前使用到舊解密的地方只有以前送過的通知信，本段函式可在2021年後移除)
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $decodeData = json_decode(revert_hash($params), true);
+        }
+
+        return $decodeData;
     }
 
     /**
@@ -55,6 +73,18 @@ class UrlHelper
      */
     public static function encodeUrlParams($data)
     {
-        return urlencode(my_hash(json_encode($data)));
+        NueipEncrypt::setCustomKey(self::getHashKey());
+
+        return NueipEncrypt::encryptCustom(json_encode($data));
+    }
+
+    /**
+     * Get hash key
+     *
+     * @return string
+     */
+    protected static function getHashKey()
+    {
+        return defined('URL_HELPER_HASH_KEY') ? URL_HELPER_HASH_KEY : 'NG51ZWlwI3VybEhlbHBlciBoYXNoIGtleUBtYXJz';
     }
 }
