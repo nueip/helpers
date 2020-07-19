@@ -96,7 +96,7 @@ class EncryptHelper
 
         $result = array_search($string, $temp, true);
         $result = $result === false
-            ? trim(base64_encode(mcrypt_encrypt($method, $key, $string, 'ecb', mcrypt_create_iv(mcrypt_get_iv_size($method, 'ecb'), '2'))))
+            ? trim(base64_encode(@mcrypt_encrypt($method, $key, $string, 'ecb')))
             : strval($result);
         $temp[$result] ?? $temp[$result] = $string;
         return $result;
@@ -115,7 +115,7 @@ class EncryptHelper
         $method = self::_getEncryptMethod($type);
         $key = self::_getEncryptKey($type);
 
-        return $temp[$string] ?? $temp[$string] = trim(mcrypt_decrypt($method, $key, base64_decode($string), 'ecb', mcrypt_create_iv(mcrypt_get_iv_size($method, 'ecb'), '2')));
+        return $temp[$string] ?? $temp[$string] = trim(@mcrypt_decrypt($method, $key, base64_decode($string), 'ecb'));
     }
 
     /**
