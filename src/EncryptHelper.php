@@ -159,6 +159,7 @@ class EncryptHelper
     /**
      * Get system iv
      *
+     * @param  string   $custom
      * @return string
      */
     private static function _getSystemIV($custom = null)
@@ -169,13 +170,13 @@ class EncryptHelper
         static $iv = null;
 
         if (isset($custom)) {
-
+            return hex2bin(md5(strval($custom)));
         } else {
             if (!isset($iv)) {
-                $iv = function_exists('getSystemIV')
-                    ? strval(getSystemIV())
+                $systemIV = function_exists('getSystemIV')
+                    ? getSystemIV()
                     : 'get System IV function not found.';
-                $iv = hex2bin(md5($iv));
+                $iv = hex2bin(md5(strval($systemIV)));
             }
         }
 
@@ -193,7 +194,7 @@ class EncryptHelper
         $temp = &self::$encryptTemp[$type];
         $method = self::_getEncryptMethod($type);
         $key = $key ?? self::_getEncryptKey($type);
-        $iv = isset($iv) ? hex2bin(md5($iv)) : self::_getSystemIV();
+        $iv = self::_getSystemIV($iv);
 
         $result = array_search($string, $temp, true);
         $result = $result === false
@@ -215,7 +216,7 @@ class EncryptHelper
         $temp = &self::$encryptTemp[$type];
         $method = self::_getEncryptMethod($type);
         $key = $key ?? self::_getEncryptKey($type);
-        $iv = isset($iv) ? hex2bin(md5($iv)) : self::_getSystemIV();
+        $iv = self::_getSystemIV($iv);
 
         return $temp[$iv][$string] ?? $temp[$iv][$string] = openssl_decrypt($string, $method, $key, 0, $iv);
     }
