@@ -45,12 +45,7 @@ class UrlHelper
      */
     public static function safeBase64Decode($input)
     {
-        $remainder = strlen($input) % 4;
-        if ($remainder) {
-            $padLength = 4 - $remainder;
-            $input .= str_repeat('=', $padLength);
-        }
-        return base64_decode(strtr($input, '-_', '+/'));
+        return base64_decode(self::_safeBase64Reduction($input));
     }
 
     /**
@@ -62,7 +57,7 @@ class UrlHelper
      */
     public static function safeBase64Encode($input)
     {
-        return str_replace('=', '', strtr(base64_encode($input), '+/', '-_'));
+        return self::_safeBase64Replace(base64_encode($input));
     }
 
     /**
