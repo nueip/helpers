@@ -79,6 +79,9 @@ class UrlHelper
             return null;
         }
 
+        // Reduction Base64
+        $params = self::_safeBase64Reduction($params);
+
         // 優先使用新的解密方式
         $decodeData = json_decode(EncryptHelper::decryptCustom($params, 'UrlParams'), true);
 
@@ -98,6 +101,35 @@ class UrlHelper
      */
     public static function encodeUrlParams($data)
     {
-        return urlencode(EncryptHelper::encryptCustom(json_encode($data), 'UrlParams'));
+        return urlencode(self::_safeBase64Replace(EncryptHelper::encryptCustom(json_encode($data), 'UrlParams')));
+    }
+
+    /**
+     * Reduction a string with URL-safe Base64.
+     *
+     * @param string $input A URL-safe Base64 encoded string
+     *
+     * @return string A decoded string
+     */
+    private static function _safeBase64Reduction($input)
+    {
+        $remainder = strlen($input) % 4;
+        if ($remainder) {
+            $padLength = 4 - $remainder;
+            $input .= str_repeat('=', $padLength);
+        }
+        return strtr($input, '-_', '+/');
+    }
+
+    /**
+     * Replace a string with Base64.
+     *
+     * @param string $input A Base64 encoded string
+     *
+     * @return string The base64 encode of what you passed in
+     */
+    private static function _safeBase64Replace($input)
+    {
+        return str_replace('=', '', strtr($input, '+/', '-_'));
     }
 }
