@@ -146,6 +146,29 @@ class FileHelper
     }
 
     /**
+     * ZIP 檔案輸出
+     * 
+     * @param string $filename 輸出檔案名
+     * @param string $path
+     * @param string $autoUnlink
+     */
+    public static function exportZip($filename, $path, $autoUnlink = true)
+    {
+        header('Pragma: public');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Encoding: utf-8');
+        header('Content-Type: charset=utf-8; application/zip; application/octet-stream');
+        header('Content-Transfer-Encoding: binary');
+        header("Content-Disposition: attachment; filename={$filename}.zip; filename*=UTF-8''{$filename}.zip");
+        header('Content-Length: ' . filesize($path));
+
+        readfile($path);
+        $autoUnlink && @unlink($path);
+        exit;
+    }
+
+    /**
      * **********************************************
      * ************** Private Function **************
      * **********************************************
