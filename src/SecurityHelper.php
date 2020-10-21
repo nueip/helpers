@@ -2,6 +2,8 @@
 
 namespace nueip\helpers;
 
+use RobThree\Auth\TwoFactorAuth;
+
 /**
  * Security Helper
  *
@@ -10,6 +12,11 @@ namespace nueip\helpers;
  */
 class SecurityHelper
 {
+    /**
+     * @var TwoFactorAuth
+     */
+    static $totpSpace = null;
+
     /**
      * Convert special characters to HTML entities
      *
@@ -50,5 +57,65 @@ class SecurityHelper
         }
 
         return false;
+    }
+
+    /**
+     * Set TwoFactorAuth display organization name
+     *
+     * @param  string                   $space
+     * @throws TwoFactorAuthException
+     * @return TwoFactorAuth
+     */
+    public static function setTotpSpace($space)
+    {
+        return self::$totpSpace = new TwoFactorAuth($space);
+    }
+
+    /**
+     * Get TwoFactorAuth object
+     *
+     * @throws TwoFactorAuthException
+     * @return TwoFactorAuth
+     */
+    public static function getTotpSpace()
+    {
+        return is_a(self::$totpSpace, TwoFactorAuth::class) ? self::$totpSpace : self::setTotpSpace(null);
+    }
+
+    /**
+     * Get TwoFactorAuth secret string
+     *
+     * @param  integer                  $bits
+     * @throws TwoFactorAuthException
+     * @return string
+     */
+    public static function getTotpSecret($bits = 160)
+    {
+        return self::getTotpSpace()->createSecret($bits);
+    }
+
+    /**
+     * Get TwoFactorAuth secret Qr Code
+     *
+     * @param  string                   $label
+     * @param  string                   $secret
+     * @throws TwoFactorAuthException
+     * @return string
+     */
+    public static function getTotpQrCode($label, $secret)
+    {
+        return self::getTotpSpace()->getQRCodeImageAsDataUri($label, $secret);
+    }
+
+    /**
+     * Verify TwoFactorAuth
+     *
+     * @param  string $secret
+     * @param  string $code
+     * @return bool
+     */
+    public static function verifyTotp($secret, $code)
+    {
+        return self::getTotpSpace()->verifyCode($secret, $code);
     }
 }
