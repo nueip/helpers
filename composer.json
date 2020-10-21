@@ -19,6 +19,7 @@
     },
     "require": {
         "php": "^7.0",
-        "marsapp/timeperiodhelper": ">=0.6"
+        "marsapp/timeperiodhelper": ">=0.6",
+        "robthree/twofactorauth": "^1.7"
     }
 }

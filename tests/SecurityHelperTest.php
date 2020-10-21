@@ -2,6 +2,7 @@
 
 use nueip\helpers\SecurityHelper;
 use PHPUnit\Framework\TestCase;
+use RobThree\Auth\TwoFactorAuth;
 
 /**
  * Test for SecurityHelperTest - PHP Unit
@@ -70,6 +71,18 @@ class SecurityHelperTest extends TestCase
         $this->assertEquals($expected, SecurityHelper::isHttps());
 
         $_SERVER = $ori_SERVER;
+    }
+
+    /**
+     * test TotpSpace
+     */
+    public function testTFA()
+    {
+        $tfa = SecurityHelper::setTotpSpace('PHPunit');
+
+        $this->assertInstanceOf(TwoFactorAuth::class, $tfa);
+
+        $this->assertEquals($tfa, SecurityHelper::getTotpSpace());
     }
 
     public function isHttpsProvider()
