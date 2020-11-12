@@ -2,6 +2,8 @@
 The time period processing library provides functions such as sorting, union, difference, intersection, and calculation time.
 
 # Outline
+- [TimePeriodHelper](#timeperiodhelper)
+- [Outline](#outline)
 - [Installation](#installation)
   - [Composer Install](#composer-install)
   - [Include](#include)
@@ -1177,7 +1179,3 @@ $result = TimePeriodHelper::time2Second(30, 'hour');
   - Document: Mars.Hung
   - UnitTest: Mars.Hung
   > https://github.com/marshung24/TimePeriodHelper
-
-
-
-
