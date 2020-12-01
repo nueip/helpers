@@ -129,4 +129,77 @@ class SqlHelper
 
         return $queryBuilder;
     }
+
+    /**
+     * 協助處理篩選條件
+     *
+     * @param array $filters 篩選條件陣列，若為空陣列或有任一個篩選條件值為 null，則將查詢結果設為空
+     * @param DB_query_builder $queryBuilder 為null時，預設為 $this->db
+     * @return DB_query_builder
+     *
+     * @example 
+     *  $query = SqlHelper::whereFilters([
+     *      'category_id' => 123,
+     *      'item_type' => [
+     *          'A', 'B', 'C'
+     *      ],
+     *      'item_name' => [
+     *           // none, before, after, both
+     *          'like_mode' => 'both',
+     *          'like_value' => 'test',
+     *      ],
+     *      'created_at' => [
+     *          'start' => '2000-01-01',
+     *          'end' => '2000-01-31'
+     *      ],
+     *  ]);
+     */
+    public static function whereFilters(array $filters, $queryBuilder = null)
+    {
+        // 參數處理
+        $queryBuilder = is_null($queryBuilder) ? get_instance()->db : $queryBuilder;
+
+        if (!$filters) {
+            // 無任何篩選條件，將查詢結果設為空
+            $queryBuilder->where(1, 0);
+        }
+
+        foreach ($filters as $column => $value) {
+            switch (gettype($value)) {
+                case 'array':
+                    $issetStart = isset($value['start']);
+                    $issetEnd = isset($value['end']);
+
+                    if (isset($value['like_mode'])) {
+                        // 建立 LIKE 語法
+                        $queryBuilder->like($column, $value['like_value'] ?? '', $value['like_mode']);
+                    } elseif (isset($value['start_column']) && isset($value['end_column']) && ($issetStart || $issetEnd)) {
+                        // 建立 start_column, end_column 與 start, end 交集查詢條件
+                        $value['start'] = $value['start'] ?? $value['end'];
+                        $value['end'] = $value['end'] ?? $value['start'];
+                        self::timeIntersect(
+                            $value['start_column'], $value['end_column'],
+                            $value['start'], $value['end'],
+                            $queryBuilder
+                        );
+                    } elseif ($issetStart || $issetEnd) {
+                        // 建立 column 與 start, end 查詢條件
+                        $issetStart && $queryBuilder->where("{$column} >=", $value['start']);
+                        $issetEnd && $queryBuilder->where("{$column} <=", $value['end']);
+                    } else {
+                        $queryBuilder = self::whereInChunk($column, $value, $queryBuilder);
+                    }
+                    break;
+                case 'NULL':
+                    // 篩選條件值為 null，將查詢結果設為空
+                    $queryBuilder->where(1, 0);
+                    break 2;
+                default:
+                    $queryBuilder->where($column, $value);
+                    break;
+            }
+        }
+
+        return $queryBuilder;
+    }
 }
