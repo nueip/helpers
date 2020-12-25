@@ -34,6 +34,10 @@ NuEIP Helpers.
 
   - ci中用的SQL有關函式
 
+- [SystemHelper](/src/README/SystemHelper.md)
+
+  - 提供處理系統參數控制的方法
+
 - [TextHelper](/src/README/TextHelper.md)
 
   - 文字有關函式
@@ -58,4 +62,7 @@ NuEIP Helpers.
 - 2020-11-16
   - Create By NuEIP
   - Document
+- 2020-12-25
+  - Create SystemHelper By Mars.
+  - Document Modify.
   
