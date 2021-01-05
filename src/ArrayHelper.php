@@ -113,6 +113,12 @@ class ArrayHelper
                 case 'less':
                     $compare = $needle >= $currentKey;
                     break;
+                case 'morethan':
+                    $compare = $needle < $currentKey;
+                    break;
+                case 'lessthan':
+                    $compare = $needle > $currentKey;
+                    break;
             }
 
             if ($compare && ($closestKey === null || abs($needle - $currentKey) < abs($needle - $closestKey))) {
@@ -126,7 +132,7 @@ class ArrayHelper
     }
 
     /**
-     * Get Less than closest item by key
+     * Get less than and equal closest item by key
      * 
      * @author Gunter Chou
      * 
@@ -140,7 +146,7 @@ class ArrayHelper
     }
 
     /**
-     * Get More than closest item by key
+     * Get more than and equal closest item by key
      * 
      * @author Gunter Chou
      * 
@@ -151,6 +157,30 @@ class ArrayHelper
     public static function getClosestMore(array $data, $needle)
     {
         return self::getClosest($data, $needle, 'more');
+    }
+
+    /**
+     * Get less than closest item by key
+     * 
+     * @param array $data
+     * @param mixed $needle
+     * @return mixed
+     */
+    public static function getClosestLessThan(array $data, $needle)
+    {
+        return self::getClosest($data, $needle, 'lessthan');
+    }
+
+    /**
+     * Get more than closest item by key
+     * 
+     * @param array $data
+     * @param mixed $needle
+     * @return mixed
+     */
+    public static function getClosestMoreThan(array $data, $needle)
+    {
+        return self::getClosest($data, $needle, 'morethan');
     }
 
     /**
