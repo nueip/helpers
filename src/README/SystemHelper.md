@@ -1,12 +1,8 @@
 # SystemHelper
 
-- [SqlHelper](#sqlhelper)
+- [SystemHelper](#systemhelper)
   - [Methods](#methods)
-    - [whereInChunk](#whereinchunk)
-    - [notWhereInChunk](#notwhereinchunk)
-    - [timeIntersect](#timeintersect)
-    - [timeAfter](#timeafter)
-    - [whereFilters](#wherefilters)
+    - [memoryMoreThan](#memorymorethan)
 
 ## Methods
 
