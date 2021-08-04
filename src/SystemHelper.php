@@ -16,10 +16,11 @@ use Exception;
  *   - 支援預設值: expires, path, domain, secure, httponly
  *   - 專用函式: Root domain存取
  * - 常數
- *   - Cookie前綴，預設優先序: COOKIE_DEFAULT_PREFIX => '' (空字串)
- *   - 過期時間，預設優先序: COOKIE_DEFAULT_EXPIRES => 無期限
- *   - 存放路徑，預設優先序: COOKIE_DEFAULT_PATH => 當前路徑
- *   - 所屬網域，優先序: COOKIE_ROOT_DOMAIN => 當前網域
+ *   - Cookie前綴，預設優先序: COOKIE_DEFAULT_PREFIX => 無前綴 '' (空字串)
+ *   - 過期時間，預設優先序: COOKIE_DEFAULT_EXPIRES => 無期限 0
+ *   - 存放路徑，預設優先序: COOKIE_DEFAULT_PATH => 當前路徑 '' (空字串)
+ *   - 所屬網域，優先序: COOKIE_DEFAULT_DOMAIN => 當前網域 '' (空字串)
+ *   - 根網域，優先序: COOKIE_ROOT_DOMAIN => COOKIE_DEFAULT_DOMAIN => 當前網域 '' (空字串)
  *
  * @author  Mars Hung
  */
@@ -29,20 +30,51 @@ class SystemHelper
     /**
      * Cookie預設參數
      */
-    static $cookieDefaultOptions = [
+    protected static $cookieDefaultOptions = [
         // Cookie前綴，預設無前綴
-        'prefix' => COOKIE_DEFAULT_PREFIX ?? '',
+        'prefix' => '',
         // 過期時間，預設無期限
-        'expires' => COOKIE_DEFAULT_EXPIRES ?? 0,
+        'expires' => 0,
         // 存放路徑
-        'path' => COOKIE_DEFAULT_PATH ?? '',
+        'path' => '',
         // 所屬網域
-        'domain' => "",
+        'domain' => '',
         // 是否只在https生效
         'secure' => true,
         // 是否只能通過HTTP協議訪問
         'httponly' => false,
+        // 根網域 - 本函式處理根網域用，非 setcookie()參數
+        'rootDomain' => '',
     ];
+
+    /**
+     * 旗標-記錄是否執行過靜態建構子
+     *
+     * @var boolean
+     */
+    protected static $staticInitialize = false;
+
+    /**
+     * 靜態建構子
+     * 
+     * - 初始化靜態屬性用
+     * - 因PHP不支援靜態建構子，因此使用autoload模擬(載入時自動呼叫)，只執行一次
+     * - 本建構子中應只支援靜態屬性/靜態函式處理
+     */
+    public static function __constructStatic()
+    {
+        if (!self::$staticInitialize) {
+            // === Cookie預設參數設定 ===
+            defined('COOKIE_DEFAULT_PREFIX') && self::$cookieDefaultOptions['prefix'] = COOKIE_DEFAULT_PREFIX;
+            defined('COOKIE_DEFAULT_EXPIRES') && self::$cookieDefaultOptions['expires'] = COOKIE_DEFAULT_EXPIRES;
+            defined('COOKIE_DEFAULT_PATH') && self::$cookieDefaultOptions['path'] = COOKIE_DEFAULT_PATH;
+            defined('COOKIE_DEFAULT_DOMAIN') && self::$cookieDefaultOptions['domain'] = COOKIE_DEFAULT_DOMAIN;
+            self::$cookieDefaultOptions['rootDomain'] = defined('COOKIE_ROOT_DOMAIN') ? COOKIE_ROOT_DOMAIN : self::$cookieDefaultOptions['domain'];
+
+            // 標記執行過靜態建構子
+            self::$staticInitialize = true;
+        }
+    }
 
     /**
      * 最小記憶體設定
@@ -199,8 +231,8 @@ class SystemHelper
      */
     public static function cookieSetRoot(string $name, string $value = "", array $options = [])
     {
-        // 覆蓋所屬網域，優先序: COOKIE_ROOT_DOMAIN => 當前網域
-        $options['domain'] = defined('COOKIE_ROOT_DOMAIN') ? COOKIE_ROOT_DOMAIN : '';
+        // 用根網域覆蓋所屬網域
+        $options['domain'] = self::$cookieDefaultOptions['rootDomain'];
 
         return self::cookieSet($name, $value, $options);
     }
@@ -281,3 +313,6 @@ class SystemHelper
         return $opt;
     }
 }
+
+// 載入時自動執行靜態建構子
+SystemHelper::__constructStatic();
