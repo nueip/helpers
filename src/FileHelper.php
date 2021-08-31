@@ -107,7 +107,7 @@ class FileHelper
     {
         header('Content-Encoding: utf-8');
         header('Content-Type: charset=utf-8; text/plain; application/octet-stream');
-        header('Content-Disposition: attachment; filename=' . $filename . '; filename*=UTF-8\'\'' . $filename);
+        header('Content-Disposition: attachment; filename="' . rawurlencode($filename) . '"; filename*=UTF-8\'\'' . rawurlencode($filename));
         
         $content = '';
         foreach ($data as $row) {
@@ -131,7 +131,7 @@ class FileHelper
     {
         header('Content-Encoding: utf-8');
         header('Content-Type: charset=utf-8; text/csv; application/octet-stream');
-        header('Content-Disposition: attachment; filename=' . $filename . '; filename*=UTF-8\'\'' . $filename);
+        header('Content-Disposition: attachment; filename="' . rawurlencode($filename) . '"; filename*=UTF-8\'\'' . rawurlencode($filename));
 
         $content = '';
         foreach ($data as $row) {
@@ -148,6 +148,8 @@ class FileHelper
     /**
      * ZIP 檔案輸出
      * 
+     * - https://datatracker.ietf.org/doc/html/rfc6266
+     * 
      * @param string $filename 輸出檔案名
      * @param string $path
      * @param string $autoUnlink
@@ -160,7 +162,9 @@ class FileHelper
         header('Content-Encoding: utf-8');
         header('Content-Type: charset=utf-8; application/zip; application/octet-stream');
         header('Content-Transfer-Encoding: binary');
-        header("Content-Disposition: attachment; filename={$filename}.zip; filename*=UTF-8''{$filename}.zip");
+        header('Content-Disposition: attachment; ' 
+                    . sprintf('filename="%s"; ', rawurlencode($filename . '.zip')) 
+                    . sprintf("filename*=utf-8''%s", rawurlencode($filename . '.zip')));
         header('Content-Length: ' . filesize($path));
 
         readfile($path);
