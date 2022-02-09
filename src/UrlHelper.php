@@ -74,8 +74,20 @@ class UrlHelper
             return null;
         }
 
+        // decode the string
+        return self::decode($params);
+    }
+
+    /**
+     * Decode the string
+     *
+     * @param string $hash
+     * @return array
+     */
+    public static function decode(string $hash)
+    {
         // Reduction Base64
-        $params = self::_safeBase64Reduction($params);
+        $params = self::_safeBase64Reduction($hash);
 
         // 優先使用新的解密方式
         $decodeData = json_decode(EncryptHelper::decryptCustom($params, 'UrlParams'), true);
