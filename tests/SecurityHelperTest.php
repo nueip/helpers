@@ -85,7 +85,7 @@ class SecurityHelperTest extends TestCase
         $this->assertEquals($tfa, SecurityHelper::getTotpSpace());
     }
 
-    public function isHttpsProvider()
+    public static function isHttpsProvider()
     {
         return [
             [

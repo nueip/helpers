@@ -23,7 +23,7 @@ class ArrayHelperTest extends TestCase
     /**
      * Set course data
      */
-    public function courseProvider()
+    public static function courseProvider()
     {
         $intKeyData = [
             90 => 'test90',

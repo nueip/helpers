@@ -54,15 +54,66 @@ NuEIP Helpers.
 
   - 驗證有關函式
 
-## Log
+## Mcrypt 支援
+> PHP 7.2 以上需要自行安裝 Mcrypt
+```bash
+# 安裝依賴
+$ sudo apt install gcc make autoconf libc-dev pkg-config libmcrypt-dev php-pear php8.1-dev
 
-- 2017-08-25
-  - Create By NuEIP
-  - Document, Test, helper
-- 2020-11-16
-  - Create By NuEIP
-  - Document
-- 2020-12-25
-  - Create SystemHelper By Mars.
-  - Document Modify.
+# 安裝 Mcrypt
+$ sudo apt-get -y install libmcrypt-dev
+$ sudo pecl install mcrypt-1.0.4
+
+# 設定
+$ sudo bash -c "echo extension=/usr/lib/php/20200930/mcrypt.so > /etc/php/8.1/cli/conf.d/mcrypt.ini"
+$ sudo bash -c "echo extension=/usr/lib/php/20200930/mcrypt.so > /etc/php/8.1/apache2/conf.d/mcrypt.ini"
+
+# 檢查
+$ php -i | grep "mcrypt"
+```
+
+
+## 測試
+> 使用PHPUnit測試
+
+### PHP7.0
+
+```bash
+# 下載指定版本的 PHPUnit 
+$ wget https://phar.phpunit.de/phpunit-6.5.phar
+
+# 執行 PHPUnit 
+$ php7.0 phpunit-6.5.phar -c phpunit-6.5.xml
+```
+
+
+### PHP7.4
+```bash
+# 下載指定版本的 PHPUnit 
+$ wget https://phar.phpunit.de/phpunit-9.6.phar
+
+# 環境變數
+$ XDEBUG_MODE=coverage; export XDEBUG_MODE;
+
+# 執行 PHPUnit 
+$ php7.4 phpunit-9.6.phar -c phpunit-9.6.xml
+```
+
+
+### PHP8.1
+```sh
+# 下載指定版本的 PHPUnit 
+$ wget https://phar.phpunit.de/phpunit-10.1.phar
+
+# 環境變數
+$ XDEBUG_MODE=coverage; export XDEBUG_MODE;
+
+# 執行 PHPUnit 
+$ php8.1 phpunit-10.1.phar -c phpunit-10.1.xml
+```
+
+
+
+
+
   
