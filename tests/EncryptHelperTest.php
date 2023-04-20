@@ -19,7 +19,8 @@ class EncryptHelperTest extends TestCase
     {
         $encrypt = EncryptHelper::encrypt($string);
         $decrypt = EncryptHelper::decrypt($encrypt);
-        $this->assertNotEquals($string, $encrypt);
+
+        $this->assertTrue($string !== $encrypt);
         $this->assertEquals($string, $decrypt);
     }
 
@@ -31,7 +32,7 @@ class EncryptHelperTest extends TestCase
         $encrypt = EncryptHelper::encryptWeb($string);
         $decrypt = EncryptHelper::decryptWeb($encrypt);
 
-        $this->assertNotEquals($string, $encrypt);
+        $this->assertTrue($string !== $encrypt);
         $this->assertEquals($string, $decrypt);
     }
 
@@ -42,14 +43,14 @@ class EncryptHelperTest extends TestCase
     {
         $encrypt = EncryptHelper::encryptCustom($string, '61SD5F5');
         $decrypt = EncryptHelper::decryptCustom($encrypt, '61SD5F5');
-        $this->assertNotEquals($string, $encrypt);
+        $this->assertTrue($string !== $encrypt);
         $this->assertEquals($string, $decrypt);
     }
 
     /**
      * @return array
      */
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             ['5000'],

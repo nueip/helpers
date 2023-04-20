@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.5/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         forceCoversAnnotation="false"
+         beStrictAboutCoversAnnotation="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         cacheResultFile="./report/cache/9.6/.phpunit.result.cache"
+         verbose="true">
+    <testsuite name="Time Period Helper Tests">
+        <directory suffix="Test.php">tests</directory>
+    </testsuite>
+
+    <coverage cacheDirectory="./report/cache/9.6"
+            includeUncoveredFiles="true"
+            processUncoveredFiles="true"
+            pathCoverage="false"
+            ignoreDeprecatedCodeUnits="true"
+            disableCodeCoverageIgnore="true">
+            <include>
+                <directory suffix=".php">src</directory>
+            </include>
+            <report>
+                <html outputDirectory="./report/9.6" lowUpperBound="50" highLowerBound="90"/>
+            </report>
+    </coverage>
+</phpunit>
