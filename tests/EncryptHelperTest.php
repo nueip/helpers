@@ -3,6 +3,9 @@
 use nueip\helpers\EncryptHelper;
 use PHPUnit\Framework\TestCase;
 
+// Token Setting 1
+define('HASH_TOKEN_DATA', json_decode(file_get_contents(__DIR__ . '/credentials/encryptToken.json'), true));
+// Token Setting 2
 define('ENVIRONMENT', 'development');
 define('HASH_TOKEN_PATH_DEV', __DIR__ . '/credentials/encryptToken.json');
 define('HASH_TOKEN_PATH', __DIR__ . '/credentials/encryptToken.json');

@@ -2,8 +2,18 @@
 
 namespace nueip\helpers;
 
+// 常數
+defined('HASH_TOKEN_DATA')      OR define('HASH_TOKEN_DATA', NULL);
+defined('ENVIRONMENT')          OR define('ENVIRONMENT', 'development');
+defined('HASH_TOKEN_PATH')      OR define('HASH_TOKEN_PATH', 'hash_token.json');
+defined('HASH_TOKEN_PATH_DEV')  OR define('HASH_TOKEN_PATH_DEV', 'hash_token_dev.json');
+
 /**
  * Encrypt Helper
+ * 
+ * - 設定加解密金鑰方式
+ *   - 金鑰設定值(優先) (Array||NULL) HASH_TOKEN_DATA
+ *   - 金鑰檔讀取路徑 (String) HASH_TOKEN_PATH / HASH_TOKEN_PATH
  *
  * @author Mars.Hung
  * @author Gunter.Chou
@@ -24,7 +34,7 @@ class EncryptHelper
      *
      * @var mixed
      */
-    protected static $credentialFileData = null;
+    protected static $credentialFileData = HASH_TOKEN_DATA;
 
     /**
      * Encrypt temp map
