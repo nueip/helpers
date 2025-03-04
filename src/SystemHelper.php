@@ -99,8 +99,8 @@ class SystemHelper
         }
 
         // 最大值檢查
-        if ($matches[1] > 2048) {
-            throw new Exception('Memory size cannot greater than 2048M!', 400);
+        if ($matches[1] > 8192) {
+            throw new Exception('Memory size cannot greater than 8192M!', 400);
         }
 
         // 大於現用值時，才更新 memory_limit
