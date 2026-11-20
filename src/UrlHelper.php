@@ -79,25 +79,24 @@ class UrlHelper
     }
 
     /**
-     * Decode the string
+     * Decode a string produced by encodeUrlParams()
+     *
+     * Only ciphertext from encodeUrlParams() is accepted; any other input, including plaintext JSON, yields null.
      *
      * @param string $hash
-     * @return array
+     * @return mixed|null Decoded data, or null when decryption fails or the plaintext is not valid JSON
      */
     public static function decode(string $hash)
     {
-        // Reduction Base64
-        $params = self::_safeBase64Reduction($hash);
+        $plaintext = EncryptHelper::decryptCustom(self::_safeBase64Reduction($hash), 'UrlParams');
 
-        // 優先使用新的解密方式
-        $decodeData = json_decode(EncryptHelper::decryptCustom($params, 'UrlParams'), true);
-
-        // 若新的解密無法正常解析，使用舊的解密方式(目前使用到舊解密的地方只有以前送過的通知信，本段函式可在2021年後移除)
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $decodeData = json_decode(revert_hash($params), true);
+        if (!is_string($plaintext)) {
+            return null;
         }
 
-        return $decodeData;
+        $decodeData = json_decode($plaintext, true);
+
+        return json_last_error() === JSON_ERROR_NONE ? $decodeData : null;
     }
 
     /**

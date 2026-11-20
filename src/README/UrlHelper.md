@@ -72,7 +72,7 @@
 - Parameters
   - $paramKey (*string*) – 預設是 **params**  GET 帶入的參數
 - Returns
-  - *mixed* - 解碼後的參數
+  - *mixed* - 解碼後的參數；參數不存在、不是 `encodeUrlParams()` 產生的密文（含明文 JSON）或解密失敗時回傳 `null`
 
 ### encodeUrlParams
 
