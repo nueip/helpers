@@ -67,6 +67,15 @@ class UrlHelperTest extends TestCase
         $this->assertNull(UrlHelper::decode('not-an-encrypted-link'));
     }
 
+    public function testDecodeUrlParamsReturnsNullForArrayValue()
+    {
+        // `?params[]=...` arrives in $_GET as an array, not a string.
+        $_GET['params'] = [urldecode(UrlHelper::encodeUrlParams(['u_sn' => 123]))];
+        $this->clearEncryptCache();
+
+        $this->assertNull(UrlHelper::decodeUrlParams());
+    }
+
     public function testDecodeUrlParamsReturnsNullWhenMissing()
     {
         $_GET = [];

@@ -63,14 +63,16 @@ class UrlHelper
     /**
      * decode the params passed by GET method
      *
+     * Only a string value is decoded; a missing parameter or an array (e.g. `?params[]=...`) yields null.
+     *
      * @param string $paramKey
-     * @return mixed
+     * @return mixed|null Decoded data, or null when the parameter is not a decodable string
      */
     public static function decodeUrlParams($paramKey = 'params')
     {
         $params = $_GET[$paramKey] ?? null;
 
-        if (!isset($params)) {
+        if (!is_string($params)) {
             return null;
         }
 
